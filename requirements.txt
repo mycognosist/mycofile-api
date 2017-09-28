@@ -2,3 +2,4 @@ Flask==0.12.1
 Flask-Script==2.0.5
 Flask-SQLAlchemy==2.2
 sqlalchemy-migrate==0.10.0
+Flask-Testing==0.6.2
