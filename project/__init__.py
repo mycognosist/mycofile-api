@@ -5,22 +5,23 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 
-# instantiate the app
-app = Flask(__name__)
-
-# set config
-app.config.from_object('project.config')
-
 # instatiate the db
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 
-from project import models
+def create_app():
 
+    # instantiate the app
+    app = Flask(__name__)
 
-@app.route('/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({
-        'status': 'success',
-        'message': 'pong!'
-    })
+    # set config
+    app.config.from_object('project.config')
+
+    # set up extensions
+    db.init_app(app)
+
+    # register blueprints
+    from project.api.views import cultures_blueprint
+    app.register_blueprint(cultures_blueprint)
+
+    return app

@@ -4,7 +4,9 @@ import os
 
 from flask_testing import TestCase
 from ..config import basedir
-from project import app, db
+from project import create_app, db
+
+app = create_app()
 
 
 class BaseTestCase(TestCase):
