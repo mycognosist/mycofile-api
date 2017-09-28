@@ -11,8 +11,5 @@ class Culture(db.Model):
     strain = db.Column(db.String(64), index=True)
     unique_id = db.Column(db.String(64), index=True, unique=True)
 
-    def __init__(self, id, species, strain, unique_id):
-        self.genus = genus
-        self.species = species
-        self.strain = strain
-        self.unique_id = unique_id
+    def __repr__(self):
+        return '<Culture %r>' % (self.unique_id)
