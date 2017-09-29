@@ -71,3 +71,54 @@ def add_culture():
             'message': 'Invalid payload.'
         }
         return jsonify(response_object), 400
+
+
+# display a single culture from the library
+@cultures_blueprint.route('/api/cultures/<unique_id>', methods=['GET'])
+def get_single_culture(unique_id):
+    """Get single culture details."""
+    response_object = {
+        'status': 'fail',
+        'message': 'Culture does not exist.'
+    }
+    try:
+        culture = Culture.query.filter_by(unique_id=unique_id).first()
+        if not culture:
+            return jsonify(response_object), 404
+        else:
+            response_object = {
+                'status': 'success',
+                'data': {
+                    'id': culture.id,
+                    'genus': culture.genus,
+                    'species': culture.species,
+                    'strain': culture.strain,
+                    'unique_id': culture.unique_id
+                }
+            }
+            return jsonify(response_object), 200
+    except ValueError:
+        return jsonify(response_object), 404
+
+# display all cultures in the library
+@cultures_blueprint.route('/api/cultures', methods=['GET'])
+def get_all_cultures():
+    """Get all culture details."""
+    cultures = Culture.query.all()
+    cultures_list = []
+    for culture in cultures:
+        culture_object = {
+            'id': culture.id,
+            'genus': culture.genus,
+            'species': culture.species,
+            'strain': culture.strain,
+            'unique_id': culture.unique_id
+        }
+        cultures_list.append(culture_object)
+    response_object = {
+        'status': 'success',
+        'data': {
+            'cultures': cultures_list
+        }
+    }
+    return jsonify(response_object), 200

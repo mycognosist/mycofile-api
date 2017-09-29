@@ -4,6 +4,20 @@
 import json
 
 from project.tests.base import BaseTestCase
+from project import db
+from project.api.models import Culture
+
+# helper function to create test cultures more easily
+def add_culture(genus, species, strain, unique_id):
+    culture = Culture(
+        genus=genus,
+        species=species,
+        strain=strain,
+        unique_id=unique_id
+    )
+    db.session.add(culture)
+    db.session.commit()
+    return culture
 
 
 class TestCultureService(BaseTestCase):
@@ -94,3 +108,64 @@ class TestCultureService(BaseTestCase):
                 'Sorry. That unique id already exists.', data['message'])
             self.assertIn('fail', data['status'])
 
+    def test_single_culture(self):
+        """Ensure get single culture behaves correctly."""
+        culture = add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
+        with self.client:
+            response = self.client.get(f'/api/cultures/{culture.unique_id}')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('Pholiota', data['data']['genus'])
+            self.assertIn('nameko', data['data']['species'])
+            self.assertIn('JP', data['data']['strain'])
+            self.assertIn('PNJP001', data['data']['unique_id'])
+            self.assertIn('success', data['status'])
+
+    def test_single_culture_no_id(self):
+        """Ensure error is thrown if a unique id is not provided."""
+        with self.client:
+            response = self.client.get('/api/cultures/blah')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('Culture does not exist', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_single_culture_incorrect_id(self):
+        """Ensure error is thrown if the unique id does not exist."""
+        with self.client:
+            response = self.client.get('/api/cultures/AAA000')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('Culture does not exist', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_all_cultures(self):
+        """Ensure get all cultures behaves correctly."""
+        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
+        add_culture('Hypsizygus', 'tesselatus', 'RL', 'HTRL001')
+        with self.client:
+            response = self.client.get('/api/cultures')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(data['data']['cultures']), 2)
+            self.assertIn('Pholiota', data['data']['cultures'][0]['genus'])
+            self.assertIn('nameko', data['data']['cultures'][0]['species'])
+            self.assertIn('JP', data['data']['cultures'][0]['strain'])
+            self.assertIn(
+                'PNJP001',
+                data['data']['cultures'][0]['unique_id']
+            )
+            self.assertIn(
+                'Hypsizygus',
+                data['data']['cultures'][1]['genus']
+            )
+            self.assertIn(
+                'tesselatus',
+                data['data']['cultures'][1]['species']
+            )
+            self.assertIn('RL', data['data']['cultures'][1]['strain'])
+            self.assertIn(
+                'HTRL001',
+                data['data']['cultures'][1]['unique_id']
+            )
+            self.assertIn('success', data['status'])

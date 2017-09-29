@@ -27,5 +27,23 @@ def recreate_db():
     db.session.commit()
 
 
+@manager.command
+def seed_db():
+    """Seeds the database."""
+    db.session.add(Culture(
+        genus='Pleurotus',
+        species='ostreatus',
+        strain='K6',
+        unique_id='POK6001'
+    ))
+    db.session.add(Culture(
+        genus='Hericium',
+        species='erinaceus',
+        strain='JP',
+        unique_id='HEJP001'
+    ))
+    db.session.commit()
+
+
 if __name__ == '__main__':
     manager.run()
