@@ -1,12 +1,12 @@
 # project/api/views.py
 
 
-from flask import Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request, render_template
 
 from project.api.models import Culture
 from project import db
 
-cultures_blueprint = Blueprint('cultures', __name__)
+cultures_blueprint = Blueprint('cultures', __name__, template_folder='./templates')
 
 
 @cultures_blueprint.errorhandler(404)
@@ -122,3 +122,21 @@ def get_all_cultures():
         }
     }
     return jsonify(response_object), 200
+
+# return an index template and receive new culture data
+@cultures_blueprint.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        genus = request.form['genus']
+        species = request.form['species']
+        strain = request.form['strain']
+        unique_id = request.form['unique_id']
+        db.session.add(Culture(
+            genus=genus,
+            species=species,
+            strain=strain,
+            unique_id=unique_id
+        ))
+        db.session.commit()
+    cultures = Culture.query.order_by(Culture.id.desc()).all()
+    return render_template('index.html', cultures=cultures)

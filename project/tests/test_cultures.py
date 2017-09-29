@@ -169,3 +169,39 @@ class TestCultureService(BaseTestCase):
                 data['data']['cultures'][1]['unique_id']
             )
             self.assertIn('success', data['status'])
+
+    def test_main_no_cultures(self):
+        """Ensure the main route behaves correctly when no cultures have been added to the database."""
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>All Cultures</h1>', response.data)
+        self.assertIn(b'<p>No cultures!</p>', response.data)
+
+    def test_main_with_cultures(self):
+        """Ensure the main route behaves correctly when cultures have been added to the database."""
+        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
+        add_culture('Hericium', 'erinaceus', 'RL', 'HERL001')
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<h1>All Cultures</h1>', response.data)
+        self.assertNotIn(b'<p>No cultures!</p>', response.data)
+        self.assertIn(b'<strong>PNJP001</strong>', response.data)
+        self.assertIn(b'<strong>HERL001</strong>', response.data)
+
+    def test_main_add_culture(self):
+        """Ensure a new culture can be added to the database."""
+        with self.client:
+            response = self.client.post(
+                '/',
+                data=dict(
+                    genus='Lentinula',
+                    species='edodes',
+                    strain='JP',
+                    unique_id='LEJP001'
+                ),
+                follow_redirects=True
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'<h1>All Cultures</h1>', response.data)
+            self.assertNotIn(b'<p>No cultures!</p>', response.data)
+            self.assertIn(b'<strong>LEJP001</strong>', response.data)
