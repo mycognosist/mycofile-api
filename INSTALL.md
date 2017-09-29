@@ -40,9 +40,9 @@ python manage.py runserver -h 0.0.0.0
 
 Note: these instructions are for Debian and Ubuntu based Linux distributions.
 
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-sudo apt-get install -y nodejs
-sudo apt-get install -y build-essential
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -  
+sudo apt-get install -y nodejs  
+sudo apt-get install -y build-essential  
 
 ### Install Create React App
 
@@ -58,5 +58,5 @@ create-react-app client
 
 ### Change into client directory and start server
 
-cd client
+cd client  
 npm start
