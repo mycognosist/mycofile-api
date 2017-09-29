@@ -4,3 +4,4 @@ Flask-SQLAlchemy==2.2
 sqlalchemy-migrate==0.10.0
 Flask-Testing==0.6.2
 coverage==4.4.1
+flask-cors==3.0.2

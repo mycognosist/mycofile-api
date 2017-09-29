@@ -60,3 +60,17 @@ create-react-app client
 
 cd client  
 npm start
+
+### Install Axios to manage the AJAX calls
+
+npm install axios@0.16.2 --save
+
+### Setup proxy to API (only for development)
+
+This step allows one to run both the client server (React app) and RESTful API server on a single host. Such an arrangement is particularly useful during development.
+
+vim ~/mycofile/client/package.json
+
+Add the following to the script (can come directly after "private": true,:
+
+"proxy": "http://localhost:5000",
