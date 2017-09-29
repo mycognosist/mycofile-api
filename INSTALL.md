@@ -22,13 +22,13 @@ source env/bin/activate
 
 pip install -r requirements.txt
 
-### Run the tests
-
-python manage.py test
-
 ### Create the development / production database
 
 python db_create.py
+
+### Run the tests
+
+python manage.py test
 
 ### Run the application
 
@@ -56,11 +56,6 @@ cd ~/mycofile
 
 create-react-app client
 
-### Change into client directory and start server
-
-cd client  
-npm start
-
 ### Install Axios to manage the AJAX calls
 
 npm install axios@0.16.2 --save
@@ -74,3 +69,8 @@ vim ~/mycofile/client/package.json
 Add the following to the script (can come directly after "private": true,:
 
 "proxy": "http://localhost:5000",
+
+### Change into client directory and start server
+
+cd client  
+npm start
