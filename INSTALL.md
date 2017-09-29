@@ -30,6 +30,10 @@ python db_create.py
 
 python manage.py test
 
+### Run the tests with coverage
+
+python manage.py cov
+
 ### Run the application
 
 python manage.py runserver -h 0.0.0.0
