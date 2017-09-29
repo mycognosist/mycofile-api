@@ -33,3 +33,30 @@ python db_create.py
 ### Run the application
 
 python manage.py runserver -h 0.0.0.0
+
+## Node.js, NPM & React.js Setup
+
+### Install Node.js & NPM
+
+Note: these instructions are for Debian and Ubuntu based Linux distributions.
+
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo apt-get install -y build-essential
+
+### Install Create React App
+
+sudo npm install create-react-app --global
+
+### Navigate to project root directory
+
+cd ~/mycofile
+
+### Create a new application
+
+create-react-app client
+
+### Change into client directory and start server
+
+cd client
+npm start
