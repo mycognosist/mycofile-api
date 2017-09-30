@@ -123,6 +123,34 @@ def get_all_cultures():
     }
     return jsonify(response_object), 200
 
+# delete a culture
+@cultures_blueprint.route('/api/cultures/<unique_id>', methods=['DELETE'])
+def delete_single_culture(unique_id):
+    """Delete a culture."""
+    try:
+        culture = Culture.query.filter_by(unique_id=unique_id).first()
+        if not culture:
+            response_object = {
+                'status': 'fail',
+                'message': f'{unique_id} does not exist.'
+            }
+            return jsonify(response_object), 404
+        else:
+            db.session.delete(culture)
+            db.session.commit()
+            response_object = {
+                'status': 'success',
+                'message': f'{unique_id} was deleted.'
+            }
+            return jsonify(response_object), 200
+    except exc.IntegrityError as e:
+        db.session.rollback()
+        response_object = {
+            'status': 'fail',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response_object), 400
+
 # return an index template and receive new culture data
 @cultures_blueprint.route('/', methods=['GET', 'POST'])
 def index():

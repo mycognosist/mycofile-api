@@ -170,6 +170,33 @@ class TestCultureService(BaseTestCase):
             )
             self.assertIn('success', data['status'])
 
+    def test_delete_culture(self):
+        """Ensure culture is successfully deleted."""
+        culture = add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
+        with self.client:
+            response = self.client.delete(
+                '/api/cultures/PNJP001',
+                data=json.dumps(dict()),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('PNJP001 was deleted.', data['message'])
+            self.assertIn('success', data['status'])
+
+    def test_delete_culture_incorrect_unique_id(self):
+        """Ensure error is thrown if the unique_id does not exist."""
+        culture = add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
+        with self.client:
+            response = self.client.delete(
+                'api/cultures/ABC123',
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('ABC123 does not exist.', data['message'])
+            self.assertIn('fail', data['status'])
+
     def test_main_no_cultures(self):
         """Ensure the main route behaves correctly when no cultures have been added to the database."""
         response = self.client.get('/')
