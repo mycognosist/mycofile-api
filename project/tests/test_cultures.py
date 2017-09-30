@@ -172,7 +172,7 @@ class TestCultureService(BaseTestCase):
 
     def test_delete_culture(self):
         """Ensure culture is successfully deleted."""
-        culture = add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
+        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
         with self.client:
             response = self.client.delete(
                 '/api/cultures/PNJP001',
@@ -186,7 +186,6 @@ class TestCultureService(BaseTestCase):
 
     def test_delete_culture_incorrect_unique_id(self):
         """Ensure error is thrown if the unique_id does not exist."""
-        culture = add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
         with self.client:
             response = self.client.delete(
                 'api/cultures/ABC123',
@@ -195,6 +194,54 @@ class TestCultureService(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('ABC123 does not exist.', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_update_culture(self):
+        """Ensure culture is successfully updated."""
+        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
+        with self.client:
+            response = self.client.put(
+                '/api/cultures/PNJP001',
+                data=json.dumps(dict(
+                    genus='Pholiota',
+                    species='nameko',
+                    strain='Taki'
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 201)
+            self.assertIn('PNJP001 was updated.', data['message'])
+            self.assertIn('success', data['status'])
+
+    def test_update_culture_invalid_json(self):
+        """Ensure error is thrown if the JSON object is empty."""
+        with self.client:
+            response = self.client.put(
+                '/api/cultures/PNJP001',
+                data=json.dumps(dict()),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_update_culture_incorrect_unique_id(self):
+        """Ensure error is thrown if the unique id does not exist."""
+        with self.client:
+            response = self.client.put(
+                '/api/cultures/BBB222',
+                data=json.dumps(dict(
+                    genus='Pleurotus',
+                    species='djamor',
+                    strain='Taki'
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('BBB222 does not exist.', data['message'])
             self.assertIn('fail', data['status'])
 
     def test_main_no_cultures(self):

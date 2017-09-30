@@ -6,6 +6,8 @@ from flask import Blueprint, jsonify, make_response, request, render_template
 from project.api.models import Culture
 from project import db
 
+from sqlalchemy import exc
+
 cultures_blueprint = Blueprint('cultures', __name__, template_folder='./templates')
 
 
@@ -143,6 +145,46 @@ def delete_single_culture(unique_id):
                 'message': f'{unique_id} was deleted.'
             }
             return jsonify(response_object), 200
+    except exc.IntegrityError as e:
+        db.session.rollback()
+        response_object = {
+            'status': 'fail',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response_object), 400
+
+# update a culture
+@cultures_blueprint.route('/api/cultures/<unique_id>', methods=['PUT'])
+def update_single_culture(unique_id):
+    """Update an existing culture."""
+    post_data = request.get_json()
+    if not post_data:
+        response_object = {
+            'status': 'fail',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response_object), 400
+    genus = post_data.get('genus')
+    species = post_data.get('species')
+    strain = post_data.get('strain')
+    try:
+        culture = Culture.query.filter_by(unique_id=unique_id).first()
+        if not culture:
+            response_object = {
+                'status': 'fail',
+                'message': f'{unique_id} does not exist.'
+                }
+            return jsonify(response_object), 404
+        else:
+            culture.genus = genus
+            culture.species = species
+            culture.strain = strain
+            db.session.commit()
+            response_object = {
+                'status': 'success',
+                'message': f'{unique_id} was updated.'
+            }
+            return jsonify(response_object), 201
     except exc.IntegrityError as e:
         db.session.rollback()
         response_object = {
