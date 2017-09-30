@@ -6,7 +6,7 @@ Mycofile is designed specifically for amateur mycologists but may be of use to c
 
 ### Technical Outline
 
-A Flask RESTful API forms the foundation of the service and communication occurs via JSONified messages. A SQLite database and SQLAlchemy complete the current backend configuration. A React.js client is currently under production.
+A Flask RESTful API forms the foundation of the service and communication occurs via JSONified messages. A SQLite database and SQLAlchemy complete the current backend configuration. A React.js client is currently under development.
 
 ### API Endpoints
 
