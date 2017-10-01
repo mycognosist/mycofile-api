@@ -24,7 +24,14 @@ pip install -r requirements.txt
 
 ### Create the development / production database
 
-python db_create.py
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+
+### Seed the database
+
+python manage.py seed_user_db
+python manage.py seed_culture_db
 
 ### Run the tests
 
