@@ -12,13 +12,18 @@ A Flask RESTful API forms the foundation of the service and communication occurs
 
 | HTTP Method | CRUD METHOD | URI                                        | Action                    |
 |-------------|-------------|--------------------------------------------|---------------------------|
+| GET         |             | http://[hostname]/ping                     | Ping - system status test |
+|-------------|-------------|--------------------------------------------|---------------------------|
 | GET         | READ        | http://[hostname]/api/cultures             | Return all cultures       |
 | GET         | READ        | http://[hostname]/api/cultures/[unique_id] | Return single culture     |
 | POST        | CREATE      | http://[hostname]/api/cultures             | Add culture               |
 | PUT         | UPDATE      | http://[hostname]/api/cultures/[unique_id] | Update culture            |
 | DELETE      | DELETE      | http://[hostname]/api/cultures/[unique_id] | Delete culture            |
 |-------------|-------------|--------------------------------------------|---------------------------|
-| GET         |             | http://[hostname]/ping                     | Ping - system status test |
+| GET         | READ        | http://[hostname]/api/users                | Return all users          |
+| GET         | READ        | http://[hostname]/api/users/[id]           | Return single user        |
+| POST        | CREATE      | http://[hostname]/api/users                | Add user                  |
+|-------------|-------------|--------------------------------------------|---------------------------|
 
 ### License
 

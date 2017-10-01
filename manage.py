@@ -4,7 +4,7 @@ import unittest, coverage
 
 from flask_script import Manager
 from project import create_app, db
-from project.api.models import Culture
+from project.api.models import Culture, User
 from flask_migrate import MigrateCommand
 
 COV = coverage.coverage(
@@ -58,8 +58,8 @@ def recreate_db():
 
 
 @manager.command
-def seed_db():
-    """Seeds the database."""
+def seed_culture_db():
+    """Seeds the Culture table of the database."""
     db.session.add(Culture(
         genus='Pleurotus',
         species='ostreatus',
@@ -71,6 +71,20 @@ def seed_db():
         species='erinaceus',
         strain='JP',
         unique_id='HEJP001'
+    ))
+    db.session.commit()
+
+
+@manager.command
+def seed_user_db():
+    """Seeds the User table of the database."""
+    db.session.add(User(
+        username='mycognosist',
+        email='gnomad@cryptolab.net'
+    ))
+    db.session.add(User(
+        username='solar',
+        email='solar@punk.earth'
     ))
     db.session.commit()
 
