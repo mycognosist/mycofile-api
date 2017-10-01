@@ -7,9 +7,9 @@ from project import db
 from project.api.models import User
 
 
-def add_user(username, email):
+def add_user(username, email, password):
     """User creation helper function."""
-    user = User(username=username, email=email)
+    user = User(username=username, email=email, password=password)
     db.session.add(user)
     db.session.commit()
     return user
@@ -25,8 +25,9 @@ class TestUserService(BaseTestCase):
                 '/api/users',
                 data=json.dumps(dict(
                     username='andrew',
-                    email='gnomad@cryptolab.net'
-                )),
+                    email='gnomad@cryptolab.net',
+                    password='test'
+                    )),
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
@@ -55,7 +56,10 @@ class TestUserService(BaseTestCase):
         with self.client:
             response = self.client.post(
                 '/api/users',
-                data=json.dumps(dict(email='crash@cryptolab.net')),
+                data=json.dumps(dict(
+                    email='crash@cryptolab.net',
+                    password='test'
+                )),
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
@@ -70,7 +74,8 @@ class TestUserService(BaseTestCase):
                 '/api/users',
                 data=json.dumps(dict(
                     username='mycognosist',
-                    email='gnomad@cryptolab.net'
+                    email='gnomad@cryptolab.net',
+                    password='test'
                 )),
                 content_type='application/json',
             )
@@ -78,7 +83,8 @@ class TestUserService(BaseTestCase):
                 '/api/users',
                 data=json.dumps(dict(
                     username='mycognosist',
-                    email='gnomad@cryptolab.net'
+                    email='gnomad@cryptolab.net',
+                    password='test'
                 )),
                 content_type='application/json',
             )
@@ -88,9 +94,25 @@ class TestUserService(BaseTestCase):
                 'Sorry. That email already exists.', data['message'])
             self.assertIn('fail', data['status'])
 
+    def test_add_user_invalid_json_keys_no_password(self):
+        """Ensure error is thrown if the JSON object does not have a password key."""
+        with self.client:
+            response = self.client.post(
+                '/api/users',
+                data=json.dumps(dict(
+                    username='luna',
+                    email='lunar@punk.system'
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('fail', data['status'])
+
     def test_single_user(self):
         """Ensure get single user behaves correctly."""
-        user = add_user('mycognosist', 'gnomad@cryptolab.net')
+        user = add_user('mycognosist', 'gnomad@cryptolab.net', 'test')
         with self.client:
             response = self.client.get(f'/api/users/{user.id}')
             data = json.loads(response.data.decode())
@@ -119,8 +141,8 @@ class TestUserService(BaseTestCase):
 
     def test_all_users(self):
         """Ensure get all users behaves correctly."""
-        add_user('mycognosist', 'gnomad@cryptolab.net')
-        add_user('solar', 'solar@punk.earth')
+        add_user('mycognosist', 'gnomad@cryptolab.net', 'password')
+        add_user('solar', 'solar@punk.earth', 'password')
         with self.client:
             response=  self.client.get('/api/users')
             data = json.loads(response.data.decode())

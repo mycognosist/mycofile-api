@@ -80,11 +80,13 @@ def seed_user_db():
     """Seeds the User table of the database."""
     db.session.add(User(
         username='mycognosist',
-        email='gnomad@cryptolab.net'
+        email='gnomad@cryptolab.net',
+        password='test'
     ))
     db.session.add(User(
         username='solar',
-        email='solar@punk.earth'
+        email='solar@punk.earth',
+        password='password'
     ))
     db.session.commit()
 
