@@ -5,6 +5,7 @@ import unittest, coverage
 from flask_script import Manager
 from project import create_app, db
 from project.api.models import Culture
+from flask_migrate import MigrateCommand
 
 COV = coverage.coverage(
     branch=True,
@@ -17,11 +18,15 @@ COV.start()
 
 app = create_app()
 manager = Manager(app)
+manager.add_command('db', MigrateCommand)
 
 @manager.command
 def test():
     """Runs the tests without code coverage."""
-    tests = unittest.TestLoader().discover('project/tests', pattern='test*.py')
+    tests = unittest.TestLoader().discover(
+        'project/tests',
+        pattern='test*.py'
+    )
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         return 0
