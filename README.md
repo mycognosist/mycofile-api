@@ -10,25 +10,25 @@ A Flask RESTful API forms the foundation of the service and communication occurs
 
 ### API Endpoints
 
-| HTTP Method | CRUD METHOD | AUTHENTICATED | URI                                        | Action                    |
-|-------------|-------------|---------------|--------------------------------------------|---------------------------|
-| GET         |             | NO            | http://[hostname]/ping                     | Ping - system status test |
-|-------------|-------------|---------------|--------------------------------------------|---------------------------|
-| GET         | READ        |               | http://[hostname]/api/users                | Return all users          |
-| GET         | READ        |               | http://[hostname]/api/users/[id]           | Return single user        |
-| POST        | CREATE      |               | http://[hostname]/api/users                | Add user                  |
-|-------------|-------------|---------------|--------------------------------------------|---------------------------|
-| POST        |             | NO            | http://[hostname]/api/auth/register        | Register a user           |
-| POST        |             | NO            | http://[hostname]/api/auth/login           | Log in a user             |
-| GET         |             | YES           | http://[hostname]/api/auth/logout          | Log out a user            |
-| GET         |             | YES           | http://[hostname]/api/auth/status          | Get user status           |
-|-------------|-------------|---------------|--------------------------------------------|---------------------------|
-| GET         | READ        |               | http://[hostname]/api/cultures             | Return all cultures       |
-| GET         | READ        |               | http://[hostname]/api/cultures/[unique_id] | Return single culture     |
-| POST        | CREATE      |               | http://[hostname]/api/cultures             | Add culture               |
-| PUT         | UPDATE      |               | http://[hostname]/api/cultures/[unique_id] | Update culture            |
-| DELETE      | DELETE      |               | http://[hostname]/api/cultures/[unique_id] | Delete culture            |
-|-------------|-------------|--------------------------------------------|---------------------------|
+| HTTP Method | Authenticated | URI                                        | Action                    |
+|-------------|---------------|--------------------------------------------|---------------------------|
+| GET         | NO            | http://[hostname]/ping                     | Ping - system status test |
+|-------------|---------------|--------------------------------------------|---------------------------|
+| GET         |               | http://[hostname]/api/users                | Return all users          |
+| GET         |               | http://[hostname]/api/users/[id]           | Return single user        |
+| POST        |               | http://[hostname]/api/users                | Add user                  |
+|-------------|---------------|--------------------------------------------|---------------------------|
+| POST        | NO            | http://[hostname]/api/auth/register        | Register a user           |
+| POST        | NO            | http://[hostname]/api/auth/login           | Log in a user             |
+| GET         | YES           | http://[hostname]/api/auth/logout          | Log out a user            |
+| GET         | YES           | http://[hostname]/api/auth/status          | Get user status           |
+|-------------|---------------|--------------------------------------------|---------------------------|
+| GET         |               | http://[hostname]/api/cultures             | Return all cultures       |
+| GET         |               | http://[hostname]/api/cultures/[unique_id] | Return single culture     |
+| POST        |               | http://[hostname]/api/cultures             | Add culture               |
+| PUT         |               | http://[hostname]/api/cultures/[unique_id] | Update culture            |
+| DELETE      |               | http://[hostname]/api/cultures/[unique_id] | Delete culture            |
+|-------------|---------------|--------------------------------------------|---------------------------|
 
 ### License
 
