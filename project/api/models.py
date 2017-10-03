@@ -1,6 +1,8 @@
 # project/api/models.py
 
 
+import datetime
+import jwt
 from flask import current_app
 from project import db, bcrypt
 
@@ -26,13 +28,20 @@ class Culture(db.Model):
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(128), index=True, unique=True)
-    email = db.Column(db.String(128), index=True, unique=True)
+    username = db.Column(
+        db.String(128),
+        index=True,
+        unique=True,
+        nullable=False
+    )
+    email = db.Column(
+        db.String(128),
+        index=True,
+        unique=True,
+        nullable=False
+    )
     active = db.Column(db.Boolean(), default=True)
-    password = db.Column(db.String(255))
-
-    def __repr__(self):
-        return '<User %r>' % (self.username)
+    password = db.Column(db.String(255), nullable=False)
 
     def __init__(self, username, email, password):
         self.username = username
@@ -40,3 +49,23 @@ class User(db.Model):
         self.password = bcrypt.generate_password_hash(
             password, current_app.config.get('BCRYPT_LOG_ROUNDS')
         ).decode()
+
+    def encode_auth_token(self, user_id):
+        """Generates the auth token."""
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(
+                    days=0, seconds=5),
+                'iat': datetime.datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                current_app.config.get('SECRET_KEY'),
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
+
+    def __repr__(self):
+        return '<User %r>' % (self.username)

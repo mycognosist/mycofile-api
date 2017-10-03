@@ -1,6 +1,8 @@
 # project/__init__.py
 
 
+import os
+
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -27,7 +29,8 @@ def create_app():
     CORS(app)
 
     # set config
-    app.config.from_object('project.config')
+    app_settings = os.getenv('APP_SETTINGS')
+    app.config.from_object(app_settings)
 
     # set up extensions
     db.init_app(app)

@@ -85,3 +85,10 @@ Add the following to the script (can come directly after "private": true,:
 
 cd client  
 npm start
+
+## Environmental variables
+
+### Flask app
+
+export APP_SETTINGS=project.config.DevelopmentConfig
+export SECRET_KEY=your_key

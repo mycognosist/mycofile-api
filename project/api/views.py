@@ -27,12 +27,6 @@ def add_user():
             'message': 'Invalid payload.'
         }
         return jsonify(response_object), 400
-    if not post_data.get('username'):
-        response_object = {
-            'status': 'fail',
-            'message': 'Invalid payload.'
-        }
-        return jsonify(response_object), 400
     username = post_data.get('username')
     email = post_data.get('email')
     password = post_data.get('password')

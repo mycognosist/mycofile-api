@@ -7,16 +7,22 @@ from project.tests.base import BaseTestCase
 from sqlalchemy.exc import IntegrityError
 
 
+# helper function to create test users more easily
+def add_user(username, email, password):
+    user = User(
+        username=username,
+        email=email,
+        password=password
+    )
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
 class TestUserModel(BaseTestCase):
 
     def test_add_user(self):
-        user = User(
-            username='justatest',
-            email='test@test.com',
-            password='test',
-        )
-        db.session.add(user)
-        db.session.commit()
+        user = add_user('justatest', 'test@test.com', 'test')
         self.assertTrue(user.id)
         self.assertEqual(user.username, 'justatest')
         self.assertEqual(user.email, 'test@test.com')
@@ -24,50 +30,31 @@ class TestUserModel(BaseTestCase):
         self.assertTrue(user.active)
 
     def test_add_user_duplicate_username(self):
-        user = User(
-            username='testing',
-            email='testing@test.com',
-            password='test',
-        )
-        db.session.add(user)
-        db.session.commit()
+        user = add_user('testing', 'testing@test.com', 'test')
         duplicate_user = User(
             username='testing',
             email='tester@test.com',
-            password='test',
+            password='test'
         )
         db.session.add(duplicate_user)
         self.assertRaises(IntegrityError, db.session.commit)
 
     def test_add_user_duplicate_email(self):
-        user = User(
-            username='anothertest',
-            email='another@test.com',
-            password='test',
-        )
-        db.session.add(user)
-        db.session.commit()
+        user = add_user('anothertest', 'another@test.com', 'test')
         duplicate_user = User(
             username='justanothertest',
             email='another@test.com',
-            password='test',
+            password='test'
         )
         db.session.add(duplicate_user)
         self.assertRaises(IntegrityError, db.session.commit)
 
     def test_passwords_are_random(self):
-        user_one = User(
-            username='justatest',
-            email='test@test.com',
-            password='test',
-        )
-        db.session.add(user_one)
-        db.session.commit()
-        user_two = User(
-            username='justatest2',
-            email='test@test2.com',
-            password='test',
-        )
-        db.session.add(user_two)
-        db.session.commit()
+        user_one = add_user('justatest', 'test@test.com', 'test')
+        user_two = add_user('justatest2', 'test@test2.com', 'test')
         self.assertNotEqual(user_one.password, user_two.password)
+
+    def test_encode_auth_token(self):
+        user = add_user('justatest', 'test@test.com', 'test')
+        auth_token = user.encode_auth_token(user.id)
+        self.assertTrue(isinstance(auth_token, bytes))
