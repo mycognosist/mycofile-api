@@ -9,20 +9,25 @@ from project import db, bcrypt
 
 class Culture(db.Model):
     __tablename__ = "cultures"
-    id = db.Column(db.Integer, primary_key=True)
-    genus = db.Column(db.String(64), index=True)
-    species = db.Column(db.String(64), index=True)
-    strain = db.Column(db.String(64), index=True)
-    unique_id = db.Column(db.String(64), index=True, unique=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    genus = db.Column(db.String(64), index=True, nullable=False)
+    species = db.Column(db.String(64), index=True, nullable=False)
+    strain = db.Column(db.String(64), index=True, nullable=False)
+    culture_id = db.Column(
+        db.String(64),
+        index=True,
+        unique=True,
+        nullable=False
+    )
 
     def __repr__(self):
-        return '<Culture %r>' % (self.unique_id)
+        return '<Culture %r>' % (self.culture_id)
 
-    def __init__(self, genus, species, strain, unique_id):
+    def __init__(self, genus, species, strain, culture_id):
         self.genus = genus
         self.species = species
         self.strain = strain
-        self.unique_id = unique_id
+        self.culture_id = culture_id
 
 
 class User(db.Model):

@@ -35,35 +35,29 @@ def add_culture():
             'message': 'Invalid payload.'
         }
         return jsonify(response_object), 400
-    if not post_data.get('unique_id'):
-        response_object = {
-            'status': 'fail',
-            'message': 'Invalid payload.'
-        }
-        return jsonify(response_object), 400
     genus = post_data.get('genus')
     species = post_data.get('species')
     strain = post_data.get('strain')
-    unique_id = post_data.get('unique_id')
+    culture_id = post_data.get('culture_id')
     try:
-        culture = Culture.query.filter_by(unique_id=unique_id).first()
+        culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
             db.session.add(Culture(
                 genus=genus,
                 species=species,
                 strain=strain,
-                unique_id=unique_id
+                culture_id=culture_id
             ))
             db.session.commit()
             response_object = {
                 'status': 'success',
-                'message': f'{unique_id} was added!'
+                'message': f'{culture_id} was added!'
             }
             return jsonify(response_object), 201
         else:
             response_object = {
                 'status': 'fail',
-                'message': 'Sorry. That unique id already exists.'
+                'message': 'Sorry. That culture_id already exists.'
             }
             return jsonify(response_object), 400
     except exc.IntegrityError as e:
@@ -76,15 +70,15 @@ def add_culture():
 
 
 # display a single culture from the library
-@cultures_blueprint.route('/api/cultures/<unique_id>', methods=['GET'])
-def get_single_culture(unique_id):
+@cultures_blueprint.route('/api/cultures/<culture_id>', methods=['GET'])
+def get_single_culture(culture_id):
     """Get single culture details."""
     response_object = {
         'status': 'fail',
         'message': 'Culture does not exist.'
     }
     try:
-        culture = Culture.query.filter_by(unique_id=unique_id).first()
+        culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
             return jsonify(response_object), 404
         else:
@@ -95,7 +89,7 @@ def get_single_culture(unique_id):
                     'genus': culture.genus,
                     'species': culture.species,
                     'strain': culture.strain,
-                    'unique_id': culture.unique_id
+                    'culture_id': culture.culture_id
                 }
             }
             return jsonify(response_object), 200
@@ -114,7 +108,7 @@ def get_all_cultures():
             'genus': culture.genus,
             'species': culture.species,
             'strain': culture.strain,
-            'unique_id': culture.unique_id
+            'culture_id': culture.culture_id
         }
         cultures_list.append(culture_object)
     response_object = {
@@ -126,15 +120,15 @@ def get_all_cultures():
     return jsonify(response_object), 200
 
 # delete a culture
-@cultures_blueprint.route('/api/cultures/<unique_id>', methods=['DELETE'])
-def delete_single_culture(unique_id):
+@cultures_blueprint.route('/api/cultures/<culture_id>', methods=['DELETE'])
+def delete_single_culture(culture_id):
     """Delete a culture."""
     try:
-        culture = Culture.query.filter_by(unique_id=unique_id).first()
+        culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
             response_object = {
                 'status': 'fail',
-                'message': f'{unique_id} does not exist.'
+                'message': f'{culture_id} does not exist.'
             }
             return jsonify(response_object), 404
         else:
@@ -142,7 +136,7 @@ def delete_single_culture(unique_id):
             db.session.commit()
             response_object = {
                 'status': 'success',
-                'message': f'{unique_id} was deleted.'
+                'message': f'{culture_id} was deleted.'
             }
             return jsonify(response_object), 200
     except exc.IntegrityError as e:
@@ -154,8 +148,8 @@ def delete_single_culture(unique_id):
         return jsonify(response_object), 400
 
 # update a culture
-@cultures_blueprint.route('/api/cultures/<unique_id>', methods=['PUT'])
-def update_single_culture(unique_id):
+@cultures_blueprint.route('/api/cultures/<culture_id>', methods=['PUT'])
+def update_single_culture(culture_id):
     """Update an existing culture."""
     post_data = request.get_json()
     if not post_data:
@@ -168,11 +162,11 @@ def update_single_culture(unique_id):
     species = post_data.get('species')
     strain = post_data.get('strain')
     try:
-        culture = Culture.query.filter_by(unique_id=unique_id).first()
+        culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
             response_object = {
                 'status': 'fail',
-                'message': f'{unique_id} does not exist.'
+                'message': f'{culture_id} does not exist.'
                 }
             return jsonify(response_object), 404
         else:
@@ -182,7 +176,7 @@ def update_single_culture(unique_id):
             db.session.commit()
             response_object = {
                 'status': 'success',
-                'message': f'{unique_id} was updated.'
+                'message': f'{culture_id} was updated.'
             }
             return jsonify(response_object), 201
     except exc.IntegrityError as e:
@@ -192,21 +186,3 @@ def update_single_culture(unique_id):
             'message': 'Invalid payload.'
         }
         return jsonify(response_object), 400
-
-# return an index template and receive new culture data
-@cultures_blueprint.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        genus = request.form['genus']
-        species = request.form['species']
-        strain = request.form['strain']
-        unique_id = request.form['unique_id']
-        db.session.add(Culture(
-            genus=genus,
-            species=species,
-            strain=strain,
-            unique_id=unique_id
-        ))
-        db.session.commit()
-    cultures = Culture.query.order_by(Culture.id.desc()).all()
-    return render_template('index.html', cultures=cultures)
