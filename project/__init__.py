@@ -38,8 +38,11 @@ def create_app():
     migrate.init_app(app, db)
 
     # register blueprints
-    from project.api.views import cultures_blueprint, users_blueprint
-    app.register_blueprint(cultures_blueprint)
+    from project.api.users import users_blueprint
+    from project.api.cultures import cultures_blueprint
+    from project.api.auth import auth_blueprint
     app.register_blueprint(users_blueprint)
+    app.register_blueprint(cultures_blueprint)
+    app.register_blueprint(auth_blueprint)
 
     return app

@@ -1,22 +1,12 @@
 # project/tests/test_user_model.py
 
 
+from sqlalchemy.exc import IntegrityError
+
 from project import db
 from project.api.models import User
 from project.tests.base import BaseTestCase
-from sqlalchemy.exc import IntegrityError
-
-
-# helper function to create test users more easily
-def add_user(username, email, password):
-    user = User(
-        username=username,
-        email=email,
-        password=password
-    )
-    db.session.add(user)
-    db.session.commit()
-    return user
+from project.tests.utils import add_user
 
 
 class TestUserModel(BaseTestCase):
@@ -58,3 +48,9 @@ class TestUserModel(BaseTestCase):
         user = add_user('justatest', 'test@test.com', 'test')
         auth_token = user.encode_auth_token(user.id)
         self.assertTrue(isinstance(auth_token, bytes))
+
+    def test_decode_auth_token(self):
+        user = add_user('justatest', 'test@test.com', 'test')
+        auth_token = user.encode_auth_token(user.id)
+        self.assertTrue(isinstance(auth_token, bytes))
+        self.assertTrue(User.decode_auth_token(auth_token), user.id)

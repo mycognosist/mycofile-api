@@ -1,23 +1,12 @@
 # project/tests/test_culture_model.py
 
 
+from sqlalchemy.exc import IntegrityError
+
 from project import db
 from project.api.models import Culture
 from project.tests.base import BaseTestCase
-from sqlalchemy.exc import IntegrityError
-
-
-# helper function to create test cultures more easily
-def add_culture(genus, species, strain, unique_id):
-    culture = Culture(
-        genus=genus,
-        species=species,
-        strain=strain,
-        unique_id=unique_id
-    )
-    db.session.add(culture)
-    db.session.commit()
-    return culture
+from project.tests.utils import add_culture
 
 
 class TestCultureModel(BaseTestCase):
