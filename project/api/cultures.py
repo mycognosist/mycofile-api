@@ -29,7 +29,7 @@ def ping_pong():
 @cultures_blueprint.route('/api/cultures', methods=['POST'])
 def add_culture():
     post_data = request.get_json()
-    if not post_data:
+    if not post_data or post_data.get('unique_id') == None:
         response_object = {
             'status': 'fail',
             'message': 'Invalid payload.'
@@ -38,7 +38,8 @@ def add_culture():
     genus = post_data.get('genus')
     species = post_data.get('species')
     strain = post_data.get('strain')
-    culture_id = post_data.get('culture_id')
+    culture_id = post_data.get('unique_id')
+    user_id = post_data.get('user_id')
     try:
         culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
@@ -46,7 +47,8 @@ def add_culture():
                 genus=genus,
                 species=species,
                 strain=strain,
-                culture_id=culture_id
+                culture_id=culture_id,
+                user_id=user_id
             ))
             db.session.commit()
             response_object = {
@@ -89,7 +91,8 @@ def get_single_culture(culture_id):
                     'genus': culture.genus,
                     'species': culture.species,
                     'strain': culture.strain,
-                    'culture_id': culture.culture_id
+                    'culture_id': culture.culture_id,
+                    'user_id': culture.user_id
                 }
             }
             return jsonify(response_object), 200
@@ -108,7 +111,8 @@ def get_all_cultures():
             'genus': culture.genus,
             'species': culture.species,
             'strain': culture.strain,
-            'culture_id': culture.culture_id
+            'culture_id': culture.culture_id,
+            'user_id': culture.user_id
         }
         cultures_list.append(culture_object)
     response_object = {

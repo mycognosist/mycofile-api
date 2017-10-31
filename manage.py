@@ -1,10 +1,11 @@
 # manage.py
 
-import unittest, coverage
+import unittest
+import coverage
 
 from flask_script import Manager
 from project import create_app, db
-from project.api.models import Culture, User
+from project.api.models import Culture, User, Line
 from flask_migrate import MigrateCommand
 
 COV = coverage.coverage(

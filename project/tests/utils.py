@@ -17,13 +17,14 @@ def add_user(username, email, password):
     return user
 
 
-def add_culture(genus, species, strain, culture_id):
+def add_culture(genus, species, strain, culture_id, user_id):
     """Helper function to create test cultures more easily."""
     culture = Culture(
         genus=genus,
         species=species,
         strain=strain,
-        culture_id=culture_id
+        culture_id=culture_id,
+        user_id=user_id
     )
     db.session.add(culture)
     db.session.commit()

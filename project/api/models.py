@@ -7,26 +7,69 @@ from flask import current_app
 from project import db, bcrypt
 
 
+class Line(db.Model):
+    _N = 3
+    __tablename__ = "lines"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    container = db.Column(db.String(32), index=True, nullable=False)
+    substrate = db.Column(db.String(64), index=True, nullable=False)
+    created_on = db.Column(db.DateTime, nullable=False)
+    signature = db.Column(
+        db.String(256),
+        index=True,
+        nullable=False,
+        unique=True
+    )
+    path = db.Column(db.Text, index=True)
+    parent = db.Column(db.Integer, db.ForeignKey('lines.id'))
+    active = db.Column(db.Boolean, default=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __repr__(self):
+        return '<Line %r>' % (self.signature)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        prefix = self.parent.path + '.' if self.parent else ''
+        self.path = prefix + '{:0{}d}'.format(self.id, self._N)
+        db.session.commit()
+
+    def level(self):
+        return len(self.path) # self._n - 1
+
+#    def __init__(self, container, substrate, created_on, signature,
+#                 path, active, user_id):
+#        self.container = container
+#        self.substrate = substrate
+#        self.created_on = created_on
+#        self.signature = signature
+#        self.path = path
+#        self.active = active
+#        self.user_id = user_id
+
+
 class Culture(db.Model):
     __tablename__ = "cultures"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     genus = db.Column(db.String(64), index=True, nullable=False)
     species = db.Column(db.String(64), index=True, nullable=False)
     strain = db.Column(db.String(64), index=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     culture_id = db.Column(
         db.String(64),
         index=True,
-        unique=True,
-        nullable=False
+        unique=True
     )
 
     def __repr__(self):
         return '<Culture %r>' % (self.culture_id)
 
-    def __init__(self, genus, species, strain, culture_id):
+    def __init__(self, genus, species, strain, culture_id, user_id):
         self.genus = genus
         self.species = species
         self.strain = strain
+        self.user_id = user_id
         self.culture_id = culture_id
 
 
@@ -49,6 +92,8 @@ class User(db.Model):
     active = db.Column(db.Boolean, default=True, nullable=False)
     admin = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
+    cultures = db.relationship('Culture', backref='cultivator', lazy='dynamic')
+    lines = db.relationship('Line', backref='cultivator', lazy='dynamic')
 
     def __init__(
             self,
