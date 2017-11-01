@@ -11,22 +11,39 @@ class Line(db.Model):
     _N = 3
     __tablename__ = "lines"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    container = db.Column(db.String(32), index=True, nullable=False)
-    substrate = db.Column(db.String(64), index=True, nullable=False)
-    created_on = db.Column(db.DateTime, nullable=False)
+    container = db.Column(db.String(32), index=True)
+    substrate = db.Column(db.String(64), index=True)
+    timestamp = db.Column(
+        db.DateTime(),
+        default=datetime.datetime.utcnow,
+        index=True
+    )
     signature = db.Column(
         db.String(256),
         index=True,
-        nullable=False,
         unique=True
     )
     path = db.Column(db.Text, index=True)
-    parent = db.Column(db.Integer, db.ForeignKey('lines.id'))
-    active = db.Column(db.Boolean, default=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    parent_id = db.Column(db.Integer, db.ForeignKey('lines.id'))
+    active = db.Column(db.Boolean, default=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False
+    )
+    culture_id = db.Column(
+        db.String(32),
+        db.ForeignKey('cultures.culture_id'),
+        nullable=False
+    )
+    expansions = db.relationship(
+        'Line',
+        backref=db.backref('parent', remote_side=[id]),
+        lazy='dynamic'
+    )
 
     def __repr__(self):
-        return '<Line %r>' % (self.signature)
+        return '<Line %r>' % (self.id)
 
     def save(self):
         db.session.add(self)
