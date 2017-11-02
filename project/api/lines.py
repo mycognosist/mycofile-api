@@ -15,7 +15,6 @@ lines_blueprint = Blueprint('lines', __name__, template_folder='./templates')
 def not_found(error):
     return make_response(jsonify({'error': 'Not found.'}), 404)
 
-
 # add a line activity
 @lines_blueprint.route('/api/lines', methods=['POST'])
 def add_line_activity():
@@ -51,7 +50,6 @@ def add_line_activity():
         }
         return jsonify(response_object), 400
 
-
 # display a single line object
 @lines_blueprint.route('/api/lines/<line_id>', methods=['GET'])
 def get_single_line_object(line_id):
@@ -79,3 +77,55 @@ def get_single_line_object(line_id):
             return jsonify(response_object), 200
     except ValueError:
         return jsonify(response_object), 404
+
+# display all lines in the library
+@lines_blueprint.route('/api/lines', methods=['GET'])
+def get_all_lines():
+    """Get all line details."""
+    lines = Line.query.all()
+    lines_list = []
+    for line in lines:
+        line_object = {
+            'id': line.id,
+            'culture_id': line.culture_id,
+            'container': line.container,
+            'substrate': line.substrate,
+            'timestamp': line.timestamp,
+            'user_id': line.user_id
+        }
+        lines_list.append(line_object)
+    response_object = {
+        'status': 'success',
+        'data': {
+            'lines': lines_list
+        }
+    }
+    return jsonify(response_object), 200
+
+# delete a line object
+@lines_blueprint.route('/api/lines/<line_object_id>', methods=['DELETE'])
+def delete_single_line_object(line_object_id):
+    """Delete a line object."""
+    try:
+        line = Line.query.filter_by(id=line_object_id).first()
+        if not line:
+            response_object = {
+                'status': 'fail',
+                'message': f'{line_object_id} does not exist.'
+            }
+            return jsonify(response_object), 404
+        else:
+            db.session.delete(line)
+            db.session.commit()
+            response_object = {
+                'status': 'success',
+                'message': f'{line_object_id} was deleted.'
+            }
+            return jsonify(response_object), 200
+    except exc.IntegrityError as e:
+        db.session.rollback()
+        response_object = {
+            'status': 'fail',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response_object), 400

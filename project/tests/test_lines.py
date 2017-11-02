@@ -77,15 +77,74 @@ class TestLineService(BaseTestCase):
             self.assertIn('Invalid payload.', data['message'])
             self.assertIn('fail', data['status'])
 
-def test_single_line(self):
+    def test_single_line(self):
         """Ensure get single line object behaves correctly."""
-        line = add_line('Petri', 'LME', 'GLJP001', 1)
+        l = Line(
+            container='Petri',
+            substrate='LME',
+            culture_id='GLJP001',
+            user_id=1
+        )
+        l.save()
         with self.client:
-            response = self.client.get(f'/api/lines/{line.id}')
+            response = self.client.get(f'/api/lines/1')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('Petri', data['data']['container'])
             self.assertIn('LME', data['data']['substrate'])
             self.assertIn('GLJP001', data['data']['culture_id'])
             self.assertEqual(data['data']['user_id'], 1)
+            self.assertIn('success', data['status'])
+
+    def test_all_lines(self):
+        """Ensure get all lines behaves correctly."""
+        l1 = Line(
+            container='Petri',
+            substrate='LME',
+            culture_id='GLJP001',
+            user_id=1
+        )
+        l2 = Line(
+            container='Jar',
+            substrate='Wheat',
+            culture_id='HETK001',
+            user_id=2
+        )
+        l1.save()
+        l2.save()
+        with self.client:
+            response = self.client.get('/api/lines')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(data['data']['lines']), 2)
+            self.assertIn('Petri', data['data']['lines'][0]['container'])
+            self.assertIn('LME', data['data']['lines'][0]['substrate'])
+            self.assertIn('GLJP001', data['data']['lines'][0]['culture_id'])
+            self.assertEqual(data['data']['lines'][0]['id'], 1)
+            self.assertEqual(data['data']['lines'][0]['user_id'], 1)
+            self.assertIn('Jar', data['data']['lines'][1]['container'])
+            self.assertIn('Wheat', data['data']['lines'][1]['substrate'])
+            self.assertIn('HETK001', data['data']['lines'][1]['culture_id'])
+            self.assertEqual(data['data']['lines'][1]['id'], 2)
+            self.assertEqual(data['data']['lines'][1]['user_id'], 2)
+            self.assertIn('success', data['status'])
+
+    def test_delete_line_object(self):
+        """Ensure line object is successfully deleted."""
+        l1 = Line(
+            container='Petri',
+            substrate='LME',
+            culture_id='GLJP001',
+            user_id=1
+        )
+        l1.save()
+        with self.client:
+            response = self.client.delete(
+                '/api/lines/1',
+                data=json.dumps(dict()),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('1 was deleted.', data['message'])
             self.assertIn('success', data['status'])
