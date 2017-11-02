@@ -55,16 +55,6 @@ class Line(db.Model):
     def level(self):
         return len(self.path) # self._n - 1
 
-#    def __init__(self, container, substrate, created_on, signature,
-#                 path, active, user_id):
-#        self.container = container
-#        self.substrate = substrate
-#        self.created_on = created_on
-#        self.signature = signature
-#        self.path = path
-#        self.active = active
-#        self.user_id = user_id
-
 
 class Culture(db.Model):
     __tablename__ = "cultures"

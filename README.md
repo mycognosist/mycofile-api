@@ -29,6 +29,11 @@ A Flask RESTful API forms the foundation of the service and communication occurs
 | PUT         |               | http://[hostname]/api/cultures/[unique_id] | Update culture            |
 | DELETE      |               | http://[hostname]/api/cultures/[unique_id] | Delete culture            |
 |-------------|---------------|--------------------------------------------|---------------------------|
+| GET         |               | http://[hostname]/api/lines                | Return all lines          |
+| GET         |               | http://[hostname]/api/lines/[id]           | Return single line        |
+| POST        |               | http://[hostname]/api/lines                | Add line object           |
+| PUT         |               | http://[hostname]/api/lines/[id]           | Update line object        |
+| DELETE      |               | http://[hostname]/api/lines/[id]           | Delete line object        |
 
 ### License
 

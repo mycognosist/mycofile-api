@@ -96,6 +96,24 @@ class TestLineService(BaseTestCase):
             self.assertEqual(data['data']['user_id'], 1)
             self.assertIn('success', data['status'])
 
+    def test_single_line_no_id(self):
+        """Ensure error is thrown if a valid id is not provided."""
+        with self.client:
+            response = self.client.get('/api/lines/blah')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('Line object does not exist', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_single_line_incorrect_id(self):
+        """Ensure error is thrown if the id does not exist."""
+        with self.client:
+            response = self.client.get('/api/lines/99')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('Line object does not exist', data['message'])
+            self.assertIn('fail', data['status'])
+
     def test_all_lines(self):
         """Ensure get all lines behaves correctly."""
         l1 = Line(
@@ -148,3 +166,66 @@ class TestLineService(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn('1 was deleted.', data['message'])
             self.assertIn('success', data['status'])
+
+    def test_delete_line_object_incorrect_id(self):
+        """Ensure error is thrown if the id does not exist."""
+        with self.client:
+            response = self.client.delete(
+                '/api/lines/99',
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('99 does not exist.', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_update_line_object(self):
+        """Ensure line object is successfully updated."""
+        l1 = Line(
+            container='Petri',
+            substrate='LME',
+            culture_id='GLJP001',
+            user_id=1,
+            active=True
+        )
+        l1.save()
+        with self.client:
+            response = self.client.put(
+                '/api/lines/1',
+                data=json.dumps(dict(
+                    active=False
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 201)
+            self.assertIn('1 was updated.', data['message'])
+            self.assertIn('success', data['status'])
+
+    def test_update_line_object_invalid_json(self):
+        """Ensure error is thrown if the JSON object is empty."""
+        with self.client:
+            response = self.client.put(
+                '/api/lines/1',
+                data=json.dumps(dict()),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_update_line_object_incorrect_id(self):
+        """Ensure error is thrown if the id does not exist."""
+        with self.client:
+            response = self.client.put(
+                '/api/lines/999',
+                data=json.dumps(dict(
+                    active=False
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('999 does not exist.', data['message'])
+            self.assertIn('fail', data['status'])

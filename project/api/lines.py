@@ -129,3 +129,39 @@ def delete_single_line_object(line_object_id):
             'message': 'Invalid payload.'
         }
         return jsonify(response_object), 400
+
+# update a line object
+@lines_blueprint.route('/api/lines/<line_object_id>', methods=['PUT'])
+def update_single_line_object(line_object_id):
+    """Update an existing line object."""
+    post_data = request.get_json()
+    if not post_data:
+        response_object = {
+            'status': 'fail',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response_object), 400
+    active = post_data.get('active')
+    try:
+        line = Line.query.filter_by(id=line_object_id).first()
+        if not line:
+            response_object = {
+                'status': 'fail',
+                'message': f'{line_object_id} does not exist.'
+            }
+            return jsonify(response_object), 404
+        else:
+            line.active = active
+            db.session.commit()
+            response_object = {
+                'status': 'success',
+                'message': f'{line_object_id} was updated.'
+            }
+            return jsonify(response_object), 201
+    except exc.IntegrityError as e:
+        db.session.rollback()
+        response_object = {
+            'status': 'fail',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response_object), 400

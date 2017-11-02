@@ -70,7 +70,6 @@ def add_culture():
         }
         return jsonify(response_object), 400
 
-
 # display a single culture from the library
 @cultures_blueprint.route('/api/cultures/<culture_id>', methods=['GET'])
 def get_single_culture(culture_id):
@@ -171,7 +170,7 @@ def update_single_culture(culture_id):
             response_object = {
                 'status': 'fail',
                 'message': f'{culture_id} does not exist.'
-                }
+            }
             return jsonify(response_object), 404
         else:
             culture.genus = genus
