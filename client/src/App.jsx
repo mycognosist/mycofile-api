@@ -9,6 +9,7 @@ import NavBar from './components/NavBar';
 import HomeWelcome from './components/HomeWelcome';
 import Form from './components/Form';
 import Logout from './components/Logout';
+import UserStatus from './components/UserStatus';
 
 class App extends Component {
   constructor() {
@@ -106,6 +107,7 @@ class App extends Component {
       <div>
         <NavBar
           title={this.state.title}
+          isAuthenticated={this.state.isAuthenticated}
         />
         <div className="container">
           <div className="row">
@@ -151,6 +153,11 @@ class App extends Component {
                 <Route exact path='/logout' render={() => (
                   <Logout
                     logoutUser={this.logoutUser.bind(this)}
+                    isAuthenticated={this.state.isAuthenticated}
+                  />
+                )} />
+                <Route exact path='/status' render={() => (
+                  <UserStatus
                     isAuthenticated={this.state.isAuthenticated}
                   />
                 )} />
