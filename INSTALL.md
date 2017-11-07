@@ -59,6 +59,18 @@ sudo apt-get install -y build-essential
 
 sudo npm install create-react-app --global
 
+### Install React Router
+
+sudo npm install --save react-router-dom@4.1.1
+
+### Install React Bootstrap
+
+sudo npm install --save react-bootstrap@0.31.0
+
+### Install React Router Bootstrap
+
+sudo npm install --save react-router-bootstrap@0.24.2
+
 ### Navigate to project root directory
 
 cd ~/mycofile

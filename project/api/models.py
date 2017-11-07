@@ -12,20 +12,18 @@ class Line(db.Model):
     __tablename__ = "lines"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     container = db.Column(db.String(32), index=True)
+    dimensions = db.Column(db.String(32), index=True)
     substrate = db.Column(db.String(64), index=True)
+    treatment = db.Column(db.String(64), index=True)
     timestamp = db.Column(
         db.DateTime(),
         default=datetime.datetime.utcnow,
         index=True
     )
-    signature = db.Column(
-        db.String(256),
-        index=True,
-        unique=True
-    )
     path = db.Column(db.Text, index=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('lines.id'))
     active = db.Column(db.Boolean, default=True)
+    contam = db.Column(db.Boolean, default=False)
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),
