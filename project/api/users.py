@@ -1,9 +1,10 @@
-# project/api/views.py
+# project/api/users.py
 
 
 from flask import Blueprint, jsonify, make_response, request, render_template
 
 from project.api.models import User
+from project.api.utils import authenticate, is_admin
 from project import db
 
 from sqlalchemy import exc
@@ -18,7 +19,14 @@ def not_found(error):
 
 # add a new user
 @users_blueprint.route('/api/users', methods=['POST'])
-def add_user():
+@authenticate
+def add_user(resp):
+    if not is_admin(resp):
+        response_object = {
+            'status': 'fail',
+            'message': 'You do not have permission to do that.'
+        }
+        return jsonify(response_object), 401
     post_data = request.get_json()
     if not post_data:
         response_object = {
