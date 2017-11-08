@@ -1,13 +1,39 @@
 import React from 'react';
+import { Table } from 'react-bootstrap';
 
 const CulturesList = (props) => {
   return (
     <div>
-      {
-        props.cultures.map((culture) => {
-          return <h4 key={culture.id} className="well"><strong>{culture.culture_id}</strong> | <em>{culture.genus} {culture.species}</em> '{culture.strain}'</h4>
-        })
-      }
+      <h1>Culture Library</h1>
+      <hr/><br/>
+      <Table striped bordered condensed hover>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Culture ID</th>
+            <th>Genus</th>
+            <th>Species</th>
+            <th>Strain</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            props.cultures.map((culture) => {
+              return (
+                <tr key={culture.id}>
+                  <td>{culture.id}</td>
+                  <td>{culture.culture_id}</td>
+                  <td>{culture.genus}</td>
+                  <td>{culture.species}</td>
+                  <td>{culture.strain}</td>
+                  <td>{culture.source}</td>
+                </tr>
+              )
+            })
+          }
+        </tbody>
+      </Table>
     </div>
   )
 }
