@@ -5,7 +5,7 @@ const CulturesList = (props) => {
     <div>
       {
         props.cultures.map((culture) => {
-          return <h4 key={culture.id} className="well"><strong>{culture.unique_id}</strong> | <em>{culture.genus} {culture.species}</em> '{culture.strain}'</h4>
+          return <h4 key={culture.id} className="well"><strong>{culture.culture_id}</strong> | <em>{culture.genus} {culture.species}</em> '{culture.strain}'</h4>
         })
       }
     </div>
