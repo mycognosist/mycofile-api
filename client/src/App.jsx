@@ -5,6 +5,7 @@ import axios from 'axios';
 import CulturesList from './components/CulturesList';
 import AddCulture from './components/AddCulture';
 import LinesList from './components/LinesList';
+import AddLineObject from './components/AddLineObject';
 import NavBar from './components/NavBar';
 import HomeWelcome from './components/HomeWelcome';
 import Form from './components/Form';
@@ -26,11 +27,22 @@ class App extends Component {
         email: '',
         password: ''
       },
-      isAuthenticated: false
+      isAuthenticated: false,
+      lines: [],
+      culture_id: '',
+      container: '',
+      substrate: '',
+      path: ''
     }
   }
   componentDidMount() {
     this.getCultures();
+    this.getLines();
+  }
+  getLines() {
+    axios.get('/api/lines')
+    .then((res) => { this.setState({ lines: res.data.data.lines }); })
+    .catch((err) => { console.log(err); })
   }
   getCultures() {
     axios.get('/api/cultures')
@@ -111,13 +123,15 @@ class App extends Component {
         />
         <div className="container">
           <div className="row">
-            <div className="col-md-3">
+            <div className="col-md-6">
               <br/>
               <Switch>
                 <Route exact path='/' component={HomeWelcome}/>
                 <Route exact path='/library' render={() => ( 
                   <div>
-                    <h1>All Cultures</h1>
+                    <CulturesList cultures={this.state.cultures}/>
+                    <br/>
+                    <h1>Add Culture</h1>
                     <hr/><br/>
                     <AddCulture
                       genus={this.state.genus}
@@ -128,10 +142,18 @@ class App extends Component {
                       addCulture={this.addCulture.bind(this)}
                     />
                     <br/>
-                    <CulturesList cultures={this.state.cultures}/>
                   </div>
                 )} />
-                <Route exact path='/lines' component={LinesList}/>
+                <Route exact path='/lines' render={() => (
+                  <div>
+                    <LinesList lines={this.state.lines}/>
+                    <br/>
+                    <h1>Add Line Object</h1>
+                    <hr/><br/>
+                    <AddLineObject/>
+                    <br/>
+                  </div>
+                )} />
                 <Route exact path='/register' render={() => (
                   <Form
                     formType={'Register'}

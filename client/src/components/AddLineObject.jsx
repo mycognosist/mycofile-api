@@ -69,20 +69,6 @@ const AddLineObject = (props) => {
           onChange={props.handleChange}
         />
       </div>
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-toggle="button"
-        value={props.contam}
-        onChange={props.handleChange}
-      />
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-toggle="button"
-        value={props.active}
-        onChange={props.handleChange}
-      />
       <input
         type="submit"
         className="btn btn-primary btn-lg btn-block"

@@ -15,6 +15,7 @@ class Line(db.Model):
     dimensions = db.Column(db.String(32), index=True)
     substrate = db.Column(db.String(64), index=True)
     treatment = db.Column(db.String(64), index=True)
+    duration = db.Column(db.String(32), index=True)
     timestamp = db.Column(
         db.DateTime(),
         default=datetime.datetime.utcnow,
@@ -24,6 +25,7 @@ class Line(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('lines.id'))
     active = db.Column(db.Boolean, default=True)
     contam = db.Column(db.Boolean, default=False)
+    backup = db.Column(db.Boolean, default=False)
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id'),

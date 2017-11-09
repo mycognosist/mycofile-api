@@ -14,7 +14,6 @@ const CulturesList = (props) => {
             <th>Genus</th>
             <th>Species</th>
             <th>Strain</th>
-            <th>Source</th>
           </tr>
         </thead>
         <tbody>
@@ -27,7 +26,6 @@ const CulturesList = (props) => {
                   <td>{culture.genus}</td>
                   <td>{culture.species}</td>
                   <td>{culture.strain}</td>
-                  <td>{culture.source}</td>
                 </tr>
               )
             })

@@ -91,7 +91,9 @@ def get_all_lines():
             'container': line.container,
             'substrate': line.substrate,
             'timestamp': line.timestamp,
-            'user_id': line.user_id
+            'user_id': line.user_id,
+            'path': line.path,
+            'indent': (line.level() * '_')
         }
         lines_list.append(line_object)
     response_object = {

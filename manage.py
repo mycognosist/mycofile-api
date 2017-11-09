@@ -78,54 +78,76 @@ def seed_line_db():
     """Seeds the Line table of the database."""
     l1 = Line(
         container='Petri',
+        dimensions='65mm',
         substrate='LME',
+        treatment='Sterilized',
         culture_id='POK6001',
-        user_id=1
+        user_id=1,
+        active=False
     )
     l2 = Line(
         container='Petri',
+        dimensions='65mm',
         substrate='LME',
+        treatment='Sterilized',
         culture_id='POK6001',
-        user_id=1,
+        user_id=1
     )
     l11 = Line(
         container='Petri',
+        dimensions='65mm',
         substrate='LME',
+        treatment='Sterilized',
         culture_id='POK6001',
         user_id=1,
+        active=False,
         parent=l1
     )
     l12 = Line(
         container='Petri',
+        dimensions='125mm',
         substrate='LME',
+        treatment='Sterilized',
         culture_id='POK6001',
         user_id=1,
+        contam=True,
         parent=l1
     )
     l13 = Line(
         container='Petri',
+        dimensions='125mm',
         substrate='LME',
+        treatment='Sterilized',
         culture_id='POK6001',
         user_id=1,
+        backup=True,
         parent=l1
     )
     l111 = Line(
         container='Jar (GM)',
+        dimensions='0.5L',
         substrate='Wheat grain',
+        treatment='Sterilized',
         culture_id='POK6001',
         user_id=1,
+        active=False,
         parent=l11
     )
     l1111 = Line(
-        container='Jar (1L)',
+        container='Jar',
+        dimensions='1L',
         substrate='Wheat grain',
+        treatment='Sterilized',
         culture_id='POK6001',
         user_id=1,
+        active=False,
         parent=l111
     )
     l11111 = Line(
         container='Bag',
+        dimensions='300mm x 1000mm',
         substrate='Hemp hurd',
+        treatment='Pasteurized',
         culture_id='POK6001',
         user_id=1,
         parent=l1111
