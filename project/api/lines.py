@@ -26,13 +26,19 @@ def add_line_activity():
         }
         return jsonify(response_object), 400
     container = post_data.get('container')
+    dimensions = post_data.get('dimensions')
     substrate = post_data.get('substrate')
+    treatment = post_data.get('treatment')
+    duration = post_data.get('duration')
     user_id = post_data.get('user_id')
     culture_id = post_data.get('culture_id')
     try:
         line = Line(
             container=container,
+            dimensions=dimensions,
             substrate=substrate,
+            treatment=treatment,
+            duration=duration,
             user_id=user_id,
             culture_id=culture_id
         )
@@ -93,7 +99,7 @@ def get_all_lines():
             'timestamp': line.timestamp,
             'user_id': line.user_id,
             'path': line.path,
-            'indent': (line.level() * '_')
+            'indent': (line.level() * '\u00a0')
         }
         lines_list.append(line_object)
     response_object = {

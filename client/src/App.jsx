@@ -31,7 +31,10 @@ class App extends Component {
       lines: [],
       culture_id: '',
       container: '',
+      dimensions: '',
       substrate: '',
+      treatment: '',
+      duration: '',
       path: ''
     }
   }
@@ -42,6 +45,31 @@ class App extends Component {
   getLines() {
     axios.get('/api/lines')
     .then((res) => { this.setState({ lines: res.data.data.lines }); })
+    .catch((err) => { console.log(err); })
+  }
+  addLineObject(event) {
+    event.preventDefault();
+    const data = {
+      user_id: this.state.user_id,
+      culture_id: this.state.culture_id,
+      container: this.state.container,
+      dimensions: this.state.dimensions,
+      substrate: this.state.substrate,
+      treatment: this.state.treatment,
+      duration: this.state.duration
+    }
+    axios.post('/api/lines', data)
+    .then((res) => {
+      this.getLines();
+      this.setState({
+        culture_id: 'Culture ID',
+        container: 'Container',
+        dimensions: 'Dimensions',
+        substrate: 'Substrate',
+        treatment: 'Treatment',
+        duration: 'Duration'
+      });
+    })
     .catch((err) => { console.log(err); })
   }
   getCultures() {
@@ -150,7 +178,16 @@ class App extends Component {
                     <br/>
                     <h1>Add Line Object</h1>
                     <hr/><br/>
-                    <AddLineObject/>
+                    <AddLineObject
+                      culture_id={this.state.culture_id}
+                      container={this.state.container}
+                      dimensions={this.state.dimensions}
+                      substrate={this.state.substrate}
+                      treatment={this.state.treatment}
+                      duration={this.state.duration}
+                      handleChange={this.handleChange.bind(this)}
+                      addLineObject={this.addLineObject.bind(this)}
+                    />
                     <br/>
                   </div>
                 )} />
