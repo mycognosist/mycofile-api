@@ -99,28 +99,38 @@ def get_single_culture(culture_id):
         return jsonify(response_object), 404
 
 # display all cultures in the library
-@cultures_blueprint.route('/api/cultures', methods=['GET'])
-def get_all_cultures():
+@cultures_blueprint.route('/api/<user_id>/cultures', methods=['GET'])
+def get_all_cultures(user_id):
     """Get all culture details."""
-    cultures = Culture.query.all()
-    cultures_list = []
-    for culture in cultures:
-        culture_object = {
-            'id': culture.id,
-            'genus': culture.genus,
-            'species': culture.species,
-            'strain': culture.strain,
-            'culture_id': culture.culture_id,
-            'user_id': culture.user_id
-        }
-        cultures_list.append(culture_object)
     response_object = {
-        'status': 'success',
-        'data': {
-            'cultures': cultures_list
-        }
+        'status': 'fail',
+        'message': 'No cultures available for user {user_id}.'
     }
-    return jsonify(response_object), 200
+    try:
+        cultures = Culture.query.filter_by(user_id=user_id)
+        if not cultures:
+            return jsonify(response_object), 404
+        else:
+            cultures_list = []
+            for culture in cultures:
+                culture_object = {
+                    'id': culture.id,
+                    'genus': culture.genus,
+                    'species': culture.species,
+                    'strain': culture.strain,
+                    'culture_id': culture.culture_id,
+                    'user_id': culture.user_id
+                }
+                cultures_list.append(culture_object)
+            response_object = {
+                'status': 'success',
+                'data': {
+                    'cultures': cultures_list
+                }
+            }
+            return jsonify(response_object), 200
+    except ValueError:
+        return jsonify(response_object), 404
 
 # delete a culture
 @cultures_blueprint.route('/api/cultures/<culture_id>', methods=['DELETE'])

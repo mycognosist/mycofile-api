@@ -29,7 +29,7 @@ class UserStatus extends Component {
     return axios(options)
     .then((res) => {
       this.setState({
-        created_at: res.data.created_at,
+        created_at: res.data.data.created_at,
         email: res.data.data.email,
         id: res.data.data.id,
         username: res.data.data.username
@@ -39,7 +39,7 @@ class UserStatus extends Component {
   }
   render() {
     if (!this.props.isAuthenticated) {
-      return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>
+      return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log in.</p>
     }
     return (
       <div>

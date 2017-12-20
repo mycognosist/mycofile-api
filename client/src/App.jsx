@@ -35,11 +35,13 @@ class App extends Component {
       substrate: '',
       treatment: '',
       duration: '',
-      path: ''
+      path: '',
+      id: '',
+      user_id: ''
     }
   }
   componentDidMount() {
-    this.getCultures();
+//    this.getCultures();
     this.getLines();
   }
   getLines() {
@@ -72,11 +74,11 @@ class App extends Component {
     })
     .catch((err) => { console.log(err); })
   }
-  getCultures() {
-    axios.get('/api/cultures')
-    .then((res) => { this.setState({ cultures: res.data.data.cultures }); })
-    .catch((err) => { console.log(err); })
-  }
+//  getCultures() {
+//    axios.get('/api/cultures')
+//    .then((res) => { this.setState({ cultures: res.data.data.cultures }); })
+//    .catch((err) => { console.log(err); })
+//  }
   addCulture(event) {
     event.preventDefault();
     const data = {
@@ -134,6 +136,7 @@ class App extends Component {
       });
       window.localStorage.setItem('authToken', res.data.auth_token);
       this.getCultures();
+      this.getLines();
     })
     .catch((err) => { console.log(err); })
   }
@@ -157,7 +160,10 @@ class App extends Component {
                 <Route exact path='/' component={HomeWelcome}/>
                 <Route exact path='/library' render={() => ( 
                   <div>
-                    <CulturesList cultures={this.state.cultures}/>
+                    <CulturesList
+                      isAuthenticated={this.state.isAuthenticated}
+                      cultures={this.state.cultures}
+                    />
                     <br/>
                     <h1>Add Culture</h1>
                     <hr/><br/>

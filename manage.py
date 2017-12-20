@@ -63,7 +63,11 @@ def recreate_db():
 def seed_culture_db():
     """Seeds the Culture table of the database."""
     add_culture('Pleurotus', 'ostreatus', 'K6', 'POK6001', 1)
+    add_culture('Pleurotus', 'eryngii', 'Winter', 'PEWI001', 1)
+    add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
     add_culture('Hericium', 'erinaceus', 'JP', 'HEJP001', 2)
+    add_culture('Hericium', 'coralloides', 'JP', 'HCJP001', 2)
+    add_culture('Lentinula', 'edodes', 'Summer', 'LESU001', 2)
 
 
 @manager.command

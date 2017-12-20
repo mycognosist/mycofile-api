@@ -96,11 +96,13 @@ Add the following to the script (can come directly after "private": true,:
 ### Change into client directory and start server
 
 cd client  
+export REACT_APP_CULTURES_SERVICE_URL=http://127.0.0.1:5000
 npm start
 
 ## Environmental variables
 
 ### Flask app
 
+source env/bin/activate
 export APP_SETTINGS=project.config.DevelopmentConfig
 export SECRET_KEY=your_key

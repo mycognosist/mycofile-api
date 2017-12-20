@@ -1,0 +1,11 @@
+[ React Notes ]
+
+    Figure out how to get user_id in AddLineObject component
+        - Get auth token from state
+        - Use token to GET /api/auth/status
+        - If authenticated, show Add Line Object
+        - Set user_id from auth GET response
+
+Currently at 'React Bootstrap' section:
+
+    https://testdriven.io/part-three-react-bootstrap
