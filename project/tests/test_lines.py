@@ -16,7 +16,7 @@ class TestLineService(BaseTestCase):
         """Ensure a new line action can be added to the database."""
         with self.client:
             response = self.client.post(
-                '/api/lines',
+                '/api/v1/lines',
                 data=json.dumps(dict(
                     container='Petri',
                     substrate='LME',
@@ -34,7 +34,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the JSON object is empty."""
         with self.client:
             response = self.client.post(
-                '/api/lines',
+                '/api/v1/lines',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -47,7 +47,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the JSON object does not have a culture_id key."""
         with self.client:
             response = self.client.post(
-                '/api/lines',
+                '/api/v1/lines',
                 data=json.dumps(dict(
                     container='Jar',
                     substrate='Wheat grain',
@@ -64,7 +64,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the JSON object does not have a user_id key."""
         with self.client:
             response = self.client.post(
-                '/api/lines',
+                '/api/v1/lines',
                 data=json.dumps(dict(
                     container='Jar',
                     substrate='Wheat grain',
@@ -87,7 +87,7 @@ class TestLineService(BaseTestCase):
         )
         l.save()
         with self.client:
-            response = self.client.get(f'/api/lines/1')
+            response = self.client.get(f'/api/v1/lines/1')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('Petri', data['data']['container'])
@@ -99,7 +99,7 @@ class TestLineService(BaseTestCase):
     def test_single_line_no_id(self):
         """Ensure error is thrown if a valid id is not provided."""
         with self.client:
-            response = self.client.get('/api/lines/blah')
+            response = self.client.get('/api/v1/lines/blah')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Line object does not exist', data['message'])
@@ -108,7 +108,7 @@ class TestLineService(BaseTestCase):
     def test_single_line_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
         with self.client:
-            response = self.client.get('/api/lines/99')
+            response = self.client.get('/api/v1/lines/99')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Line object does not exist', data['message'])
@@ -131,7 +131,7 @@ class TestLineService(BaseTestCase):
         l1.save()
         l2.save()
         with self.client:
-            response = self.client.get('/api/lines')
+            response = self.client.get('/api/v1/lines')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data['data']['lines']), 2)
@@ -158,7 +158,7 @@ class TestLineService(BaseTestCase):
         l1.save()
         with self.client:
             response = self.client.delete(
-                '/api/lines/1',
+                '/api/v1/lines/1',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -171,7 +171,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the id does not exist."""
         with self.client:
             response = self.client.delete(
-                '/api/lines/99',
+                '/api/v1/lines/99',
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())
@@ -191,7 +191,7 @@ class TestLineService(BaseTestCase):
         l1.save()
         with self.client:
             response = self.client.put(
-                '/api/lines/1',
+                '/api/v1/lines/1',
                 data=json.dumps(dict(
                     active=False
                 )),
@@ -206,7 +206,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the JSON object is empty."""
         with self.client:
             response = self.client.put(
-                '/api/lines/1',
+                '/api/v1/lines/1',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -219,7 +219,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the id does not exist."""
         with self.client:
             response = self.client.put(
-                '/api/lines/999',
+                '/api/v1/lines/999',
                 data=json.dumps(dict(
                     active=False
                 )),

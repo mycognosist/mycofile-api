@@ -18,7 +18,7 @@ def not_found(error):
 
 
 # add a new user
-@users_blueprint.route('/api/users', methods=['POST'])
+@users_blueprint.route('/api/v1/users', methods=['POST'])
 @authenticate
 def add_user(resp):
     if not is_admin(resp):
@@ -67,7 +67,7 @@ def add_user(resp):
 
 
 # display a single user
-@users_blueprint.route('/api/users/<user_id>', methods=['GET'])
+@users_blueprint.route('/api/v1/users/<user_id>', methods=['GET'])
 def get_single_user(user_id):
     """Get single user details."""
     response_object = {
@@ -92,7 +92,7 @@ def get_single_user(user_id):
 
 
 # display all users
-@users_blueprint.route('/api/users', methods=['GET'])
+@users_blueprint.route('/api/v1/users', methods=['GET'])
 def get_all_users():
     """Get all users."""
     users = User.query.all()

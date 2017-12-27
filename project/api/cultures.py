@@ -3,7 +3,7 @@
 
 from flask import Blueprint, jsonify, make_response, request, render_template
 
-from project.api.models import Culture
+from project.api.models import Culture, User
 from project import db
 
 from sqlalchemy import exc
@@ -17,7 +17,7 @@ def not_found(error):
 
 
 # system status
-@cultures_blueprint.route('/ping', methods=['GET'])
+@cultures_blueprint.route('/api/v1/ping', methods=['GET'])
 def ping_pong():
     return jsonify({
         'status': 'success',
@@ -26,7 +26,7 @@ def ping_pong():
 
 
 # add a new culture to the library
-@cultures_blueprint.route('/api/cultures', methods=['POST'])
+@cultures_blueprint.route('/api/v1/cultures', methods=['POST'])
 def add_culture():
     post_data = request.get_json()
     if not post_data or post_data.get('unique_id') == None:
@@ -41,7 +41,7 @@ def add_culture():
     culture_id = post_data.get('unique_id')
     user_id = post_data.get('user_id')
     try:
-        culture = Culture.query.filter_by(culture_id=culture_id).first()
+        culture = Culture.query.filter(culture_id==culture_id and user_id==user_id).first()
         if not culture:
             db.session.add(Culture(
                 genus=genus,
@@ -71,7 +71,7 @@ def add_culture():
         return jsonify(response_object), 400
 
 # display a single culture from the library
-@cultures_blueprint.route('/api/cultures/<culture_id>', methods=['GET'])
+@cultures_blueprint.route('/api/v1/cultures/<culture_id>', methods=['GET'])
 def get_single_culture(culture_id):
     """Get single culture details."""
     response_object = {
@@ -99,7 +99,7 @@ def get_single_culture(culture_id):
         return jsonify(response_object), 404
 
 # display all cultures in the library
-@cultures_blueprint.route('/api/cultures', methods=['GET'])
+@cultures_blueprint.route('/api/v1/cultures', methods=['GET'])
 def get_all_cultures():
     """Get all culture details."""
     cultures = Culture.query.all()
@@ -123,7 +123,7 @@ def get_all_cultures():
     return jsonify(response_object), 200
 
 # delete a culture
-@cultures_blueprint.route('/api/cultures/<culture_id>', methods=['DELETE'])
+@cultures_blueprint.route('/api/v1/cultures/<culture_id>', methods=['DELETE'])
 def delete_single_culture(culture_id):
     """Delete a culture."""
     try:
@@ -151,7 +151,7 @@ def delete_single_culture(culture_id):
         return jsonify(response_object), 400
 
 # update a culture
-@cultures_blueprint.route('/api/cultures/<culture_id>', methods=['PUT'])
+@cultures_blueprint.route('/api/v1/cultures/<culture_id>', methods=['PUT'])
 def update_single_culture(culture_id):
     """Update an existing culture."""
     post_data = request.get_json()

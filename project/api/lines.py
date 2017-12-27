@@ -16,7 +16,7 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found.'}), 404)
 
 # add a line activity
-@lines_blueprint.route('/api/lines', methods=['POST'])
+@lines_blueprint.route('/api/v1/lines', methods=['POST'])
 def add_line_activity():
     post_data = request.get_json()
     if not post_data:
@@ -51,7 +51,7 @@ def add_line_activity():
         return jsonify(response_object), 400
 
 # display a single line object
-@lines_blueprint.route('/api/lines/<line_id>', methods=['GET'])
+@lines_blueprint.route('/api/v1/lines/<line_id>', methods=['GET'])
 def get_single_line_object(line_id):
     """Get single line object details."""
     response_object = {
@@ -79,7 +79,7 @@ def get_single_line_object(line_id):
         return jsonify(response_object), 404
 
 # display all lines in the library
-@lines_blueprint.route('/api/lines', methods=['GET'])
+@lines_blueprint.route('/api/v1/lines', methods=['GET'])
 def get_all_lines():
     """Get all line details."""
     lines = Line.query.all()
@@ -103,7 +103,7 @@ def get_all_lines():
     return jsonify(response_object), 200
 
 # delete a line object
-@lines_blueprint.route('/api/lines/<line_object_id>', methods=['DELETE'])
+@lines_blueprint.route('/api/v1/lines/<line_object_id>', methods=['DELETE'])
 def delete_single_line_object(line_object_id):
     """Delete a line object."""
     try:
@@ -131,7 +131,7 @@ def delete_single_line_object(line_object_id):
         return jsonify(response_object), 400
 
 # update a line object
-@lines_blueprint.route('/api/lines/<line_object_id>', methods=['PUT'])
+@lines_blueprint.route('/api/v1/lines/<line_object_id>', methods=['PUT'])
 def update_single_line_object(line_object_id):
     """Update an existing line object."""
     post_data = request.get_json()

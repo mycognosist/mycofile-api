@@ -18,7 +18,7 @@ def not_found(error):
 
 
 # register a new user
-@auth_blueprint.route('/api/auth/register', methods=['POST'])
+@auth_blueprint.route('/api/v1/auth/register', methods=['POST'])
 def register_user():
     post_data = request.get_json()
     if not post_data:
@@ -68,7 +68,7 @@ def register_user():
 
 
 # user login
-@auth_blueprint.route('/api/auth/login', methods=['POST'])
+@auth_blueprint.route('/api/v1/auth/login', methods=['POST'])
 def login_user():
     # get post data
     post_data = request.get_json()
@@ -108,7 +108,7 @@ def login_user():
 
 
 # user logout
-@auth_blueprint.route('/api/auth/logout', methods=['GET'])
+@auth_blueprint.route('/api/v1/auth/logout', methods=['GET'])
 @authenticate
 def logout_user(resp):
     response_object = {
@@ -118,7 +118,7 @@ def logout_user(resp):
     return jsonify(response_object), 200
 
 # user status
-@auth_blueprint.route('/api/auth/status', methods=['GET'])
+@auth_blueprint.route('/api/v1/auth/status', methods=['GET'])
 @authenticate
 def get_user_status(resp):
     user = User.query.filter_by(id=resp).first()

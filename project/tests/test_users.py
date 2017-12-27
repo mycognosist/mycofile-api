@@ -31,7 +31,7 @@ class TestUserService(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -39,7 +39,7 @@ class TestUserService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/api/users',
+                '/api/v1/users',
                 data=json.dumps(dict()),
                 content_type='application/json',
                 headers=dict(
@@ -62,7 +62,7 @@ class TestUserService(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='gnomad@cryptolab.net',
                     password='test'
@@ -70,7 +70,7 @@ class TestUserService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/api/users',
+                '/api/v1/users',
                 data=json.dumps(dict(
                     email='crash@cryptolab.net',
                     password='test'
@@ -96,7 +96,7 @@ class TestUserService(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='gnomad@cryptolab.net',
                     password='test'
@@ -104,7 +104,7 @@ class TestUserService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/api/users',
+                '/api/v1/users',
                 data=json.dumps(dict(
                     username='mycognosist',
                     email='gnomad@cryptolab.net',
@@ -132,7 +132,7 @@ class TestUserService(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -140,7 +140,7 @@ class TestUserService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/api/users',
+                '/api/v1/users',
                 data=json.dumps(dict(
                     username='luna',
                     email='lunar@punk.system'
@@ -163,7 +163,7 @@ class TestUserService(BaseTestCase):
         with self.client:
             # user login
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -171,7 +171,7 @@ class TestUserService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/api/users',
+                '/api/v1/users',
                 data=json.dumps(dict(
                     username='joel',
                     email='joel@joel.com',
@@ -194,7 +194,7 @@ class TestUserService(BaseTestCase):
         """Ensure get single user behaves correctly."""
         user = add_user('mycognosist', 'gnomad@cryptolab.net', 'test')
         with self.client:
-            response = self.client.get(f'/api/users/{user.id}')
+            response = self.client.get(f'/api/v1/users/{user.id}')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('mycognosist', data['data']['username'])
@@ -204,7 +204,7 @@ class TestUserService(BaseTestCase):
     def test_single_user_no_id(self):
         """Ensure error is thrown if an id is not provided."""
         with self.client:
-            response = self.client.get('/api/users/blah')
+            response = self.client.get('/api/v1/users/blah')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('User does not exist', data['message'])
@@ -213,7 +213,7 @@ class TestUserService(BaseTestCase):
     def test_single_user_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
         with self.client:
-            response = self.client.get('/api/users/999')
+            response = self.client.get('/api/v1/users/999')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('User does not exist', data['message'])
@@ -224,7 +224,7 @@ class TestUserService(BaseTestCase):
         add_user('mycognosist', 'gnomad@cryptolab.net', 'password')
         add_user('solar', 'solar@punk.earth', 'password')
         with self.client:
-            response=  self.client.get('/api/users')
+            response=  self.client.get('/api/v1/users')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data['data']['users']), 2)

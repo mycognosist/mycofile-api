@@ -16,7 +16,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure successful user registration."""
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='justatest',
                     email='test@test.com',
@@ -36,7 +36,7 @@ class TestAuthBlueprint(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jeff',
                     email='test@test.com',
@@ -55,7 +55,7 @@ class TestAuthBlueprint(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='test',
                     email='test2@test.com',
@@ -73,7 +73,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure error is thrown if the JSON object is empty."""
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict()),
                 content_type='application/json'
             )
@@ -86,7 +86,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure error is thrown if no username is included."""
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -102,7 +102,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure error is thrown if no email is included."""
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='justatest',
                     password='test'
@@ -118,7 +118,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure error is thrown if no password is included."""
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='justatest',
                     email='test@test.com'
@@ -135,7 +135,7 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             user = add_user('test', 'test@test.com', 'test')
             response = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -153,7 +153,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure error is thrown if unregistered user attempts login."""
         with self.client:
             response = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -172,7 +172,7 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             # user login
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -181,7 +181,7 @@ class TestAuthBlueprint(BaseTestCase):
             )
             # valid token logout
             response = self.client.get(
-                '/api/auth/logout',
+                '/api/v1/auth/logout',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -198,7 +198,7 @@ class TestAuthBlueprint(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -208,7 +208,7 @@ class TestAuthBlueprint(BaseTestCase):
             # invalid token logout
             time.sleep(4)
             response = self.client.get(
-                '/api/auth/logout',
+                '/api/v1/auth/logout',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -226,7 +226,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure error is thrown if token is invalid."""
         with self.client:
             response = self.client.get(
-                '/api/auth/logout',
+                '/api/v1/auth/logout',
                 headers=dict(Authorization='Bearer invalid'))
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
@@ -243,7 +243,7 @@ class TestAuthBlueprint(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -251,7 +251,7 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                '/api/auth/logout',
+                '/api/v1/auth/logout',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -269,7 +269,7 @@ class TestAuthBlueprint(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -277,7 +277,7 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                '/api/auth/status',
+                '/api/v1/auth/status',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -297,7 +297,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure error is thrown if user detail request is sent without valid token."""
         with self.client:
             response = self.client.get(
-                '/api/auth/status',
+                '/api/v1/auth/status',
                 headers=dict(Authorization='Bearer invalid'))
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
@@ -314,7 +314,7 @@ class TestAuthBlueprint(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -322,7 +322,7 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                '/api/auth/status',
+                '/api/v1/auth/status',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -343,7 +343,7 @@ class TestAuthBlueprint(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/api/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -351,7 +351,7 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/api/users',
+                '/api/v1/users',
                 data=json.dumps(dict(
                     username='myco',
                     email='myco@test.com',
