@@ -22,6 +22,11 @@ source env/bin/activate
 
 pip install -r requirements.txt
 
+### Set environment variables
+
+export APP_SETTINGS=project.config.DevelopmentConfig
+export SECRET_KEY=your_key
+
 ### Create the development / production database
 
 python manage.py db init
@@ -97,10 +102,3 @@ Add the following to the script (can come directly after "private": true,:
 
 cd client  
 npm start
-
-## Environmental variables
-
-### Flask app
-
-export APP_SETTINGS=project.config.DevelopmentConfig
-export SECRET_KEY=your_key

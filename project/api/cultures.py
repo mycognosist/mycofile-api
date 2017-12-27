@@ -122,6 +122,30 @@ def get_all_cultures():
     }
     return jsonify(response_object), 200
 
+# display all cultures in the library for a given user
+@cultures_blueprint.route('/api/v1/cultures/user/<user_id>', methods=['GET'])
+def get_all_cultures_for_user(user_id):
+    """Get all culture details."""
+    cultures = Culture.query.filter_by(user_id=user_id).all()
+    cultures_list = []
+    for culture in cultures:
+        culture_object = {
+            'id': culture.id,
+            'genus': culture.genus,
+            'species': culture.species,
+            'strain': culture.strain,
+            'culture_id': culture.culture_id,
+            'user_id': culture.user_id
+        }
+        cultures_list.append(culture_object)
+    response_object = {
+        'status': 'success',
+        'data': {
+            'cultures': cultures_list
+        }
+    }
+    return jsonify(response_object), 200
+
 # delete a culture
 @cultures_blueprint.route('/api/v1/cultures/<culture_id>', methods=['DELETE'])
 def delete_single_culture(culture_id):

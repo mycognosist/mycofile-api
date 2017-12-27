@@ -10,30 +10,31 @@ A Flask RESTful API forms the foundation of the service and communication occurs
 
 ### API Endpoints
 
-| HTTP Method | Authenticated | URI                                        | Action                    |
-|-------------|---------------|--------------------------------------------|---------------------------|
-| GET         | NO            | http://[hostname]/ping                     | Ping - system status test |
-|-------------|---------------|--------------------------------------------|---------------------------|
-| GET         |               | http://[hostname]/api/users                | Return all users          |
-| GET         |               | http://[hostname]/api/users/[id]           | Return single user        |
-| POST        |               | http://[hostname]/api/users                | Add user                  |
-|-------------|---------------|--------------------------------------------|---------------------------|
-| POST        | NO            | http://[hostname]/api/auth/register        | Register a user           |
-| POST        | NO            | http://[hostname]/api/auth/login           | Log in a user             |
-| GET         | YES           | http://[hostname]/api/auth/logout          | Log out a user            |
-| GET         | YES           | http://[hostname]/api/auth/status          | Get user status           |
-|-------------|---------------|--------------------------------------------|---------------------------|
-| GET         |               | http://[hostname]/api/cultures             | Return all cultures       |
-| GET         |               | http://[hostname]/api/cultures/[unique_id] | Return single culture     |
-| POST        |               | http://[hostname]/api/cultures             | Add culture               |
-| PUT         |               | http://[hostname]/api/cultures/[unique_id] | Update culture            |
-| DELETE      |               | http://[hostname]/api/cultures/[unique_id] | Delete culture            |
-|-------------|---------------|--------------------------------------------|---------------------------|
-| GET         |               | http://[hostname]/api/lines                | Return all lines          |
-| GET         |               | http://[hostname]/api/lines/[id]           | Return single line        |
-| POST        |               | http://[hostname]/api/lines                | Add line object           |
-| PUT         |               | http://[hostname]/api/lines/[id]           | Update line object        |
-| DELETE      |               | http://[hostname]/api/lines/[id]           | Delete line object        |
+| HTTP Method | Authenticated | URI                                        | Action                       |
+|-------------|---------------|--------------------------------------------|------------------------------|
+| GET         | NO            | http://[..]/api/v1/ping                    | Ping - system status test    |
+|-------------|---------------|--------------------------------------------|------------------------------|
+| GET         |               | http://[..]/api/v1/users                   | Return all users             |
+| GET         |               | http://[..]/api/v1/users/[user_id]         | Return single user           |
+| POST        |               | http://[..]/api/v1/users                   | Add user                     |
+|-------------|---------------|--------------------------------------------|------------------------------|
+| POST        | NO            | http://[..]/api/v1/auth/register           | Register a user              |
+| POST        | NO            | http://[..]/api/v1/auth/login              | Log in a user                |
+| GET         | YES           | http://[..]/api/v1/auth/logout             | Log out a user               |
+| GET         | YES           | http://[..]/api/v1/auth/status             | Get user status              |
+|-------------|---------------|--------------------------------------------|------------------------------|
+| GET         |               | http://[..]/api/v1/cultures                | Return all cultures          |
+| GET         |               | http://[..]/api/v1/cultures/[unique_id]    | Return single culture        |
+| GET         |               | http://[..]/api/v1/cultures/user/[user_id] | Return all cultures for user |
+| POST        |               | http://[..]/api/v1/cultures                | Add culture                  |
+| PUT         |               | http://[..]/api/v1/cultures/[unique_id]    | Update culture               |
+| DELETE      |               | http://[..]/api/v1/cultures/[unique_id]    | Delete culture               |
+|-------------|---------------|--------------------------------------------|------------------------------|
+| GET         |               | http://[..]/api/v1/lines                   | Return all lines             |
+| GET         |               | http://[..]/api/v1/lines/[id]              | Return single line           |
+| POST        |               | http://[..]/api/v1/lines                   | Add line object              |
+| PUT         |               | http://[..]/api/v1/lines/[id]              | Update line object           |
+| DELETE      |               | http://[..]/api/v1/lines/[id]              | Delete line object           |
 
 ### License
 
