@@ -41,7 +41,7 @@ def add_culture():
     culture_id = post_data.get('unique_id')
     user_id = post_data.get('user_id')
     try:
-        culture = Culture.query.filter(culture_id==culture_id and user_id==user_id).first()
+        culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
             db.session.add(Culture(
                 genus=genus,
@@ -71,15 +71,19 @@ def add_culture():
         return jsonify(response_object), 400
 
 # display a single culture from the library
-@cultures_blueprint.route('/api/v1/cultures/<culture_id>', methods=['GET'])
-def get_single_culture(culture_id):
-    """Get single culture details."""
+@cultures_blueprint.route(
+    '/api/v1/users/<user_id>/cultures/<culture_id>',
+    methods=['GET']
+)
+
+def get_single_culture(user_id, culture_id):
+    """Get single culture details for specified user."""
     response_object = {
         'status': 'fail',
         'message': 'Culture does not exist.'
     }
     try:
-        culture = Culture.query.filter_by(culture_id=culture_id).first()
+        culture = Culture.query.filter_by(user_id=user_id).filter_by(culture_id=culture_id).first()
         if not culture:
             return jsonify(response_object), 404
         else:
@@ -98,32 +102,8 @@ def get_single_culture(culture_id):
     except ValueError:
         return jsonify(response_object), 404
 
-# display all cultures in the library
-@cultures_blueprint.route('/api/v1/cultures', methods=['GET'])
-def get_all_cultures():
-    """Get all culture details."""
-    cultures = Culture.query.all()
-    cultures_list = []
-    for culture in cultures:
-        culture_object = {
-            'id': culture.id,
-            'genus': culture.genus,
-            'species': culture.species,
-            'strain': culture.strain,
-            'culture_id': culture.culture_id,
-            'user_id': culture.user_id
-        }
-        cultures_list.append(culture_object)
-    response_object = {
-        'status': 'success',
-        'data': {
-            'cultures': cultures_list
-        }
-    }
-    return jsonify(response_object), 200
-
 # display all cultures in the library for a given user
-@cultures_blueprint.route('/api/v1/cultures/user/<user_id>', methods=['GET'])
+@cultures_blueprint.route('/api/v1/users/<user_id>/cultures', methods=['GET'])
 def get_all_cultures_for_user(user_id):
     """Get all culture details."""
     cultures = Culture.query.filter_by(user_id=user_id).all()
@@ -147,11 +127,12 @@ def get_all_cultures_for_user(user_id):
     return jsonify(response_object), 200
 
 # delete a culture
-@cultures_blueprint.route('/api/v1/cultures/<culture_id>', methods=['DELETE'])
-def delete_single_culture(culture_id):
+@cultures_blueprint.route('/api/v1/users/<user_id>/cultures/<culture_id>',
+                           methods=['DELETE'])
+def delete_single_culture(user_id, culture_id):
     """Delete a culture."""
     try:
-        culture = Culture.query.filter_by(culture_id=culture_id).first()
+        culture = Culture.query.filter_by(user_id=user_id).filter_by(culture_id=culture_id).first()
         if not culture:
             response_object = {
                 'status': 'fail',
@@ -175,8 +156,8 @@ def delete_single_culture(culture_id):
         return jsonify(response_object), 400
 
 # update a culture
-@cultures_blueprint.route('/api/v1/cultures/<culture_id>', methods=['PUT'])
-def update_single_culture(culture_id):
+@cultures_blueprint.route('/api/v1/users/<user_id>/cultures/<culture_id>', methods=['PUT'])
+def update_single_culture(user_id, culture_id):
     """Update an existing culture."""
     post_data = request.get_json()
     if not post_data:
@@ -189,7 +170,7 @@ def update_single_culture(culture_id):
     species = post_data.get('species')
     strain = post_data.get('strain')
     try:
-        culture = Culture.query.filter_by(culture_id=culture_id).first()
+        culture = Culture.query.filter_by(user_id=user_id).filter_by(culture_id=culture_id).first()
         if not culture:
             response_object = {
                 'status': 'fail',

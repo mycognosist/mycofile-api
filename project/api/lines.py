@@ -51,15 +51,15 @@ def add_line_activity():
         return jsonify(response_object), 400
 
 # display a single line object
-@lines_blueprint.route('/api/v1/lines/<line_id>', methods=['GET'])
-def get_single_line_object(line_id):
+@lines_blueprint.route('/api/v1/users/<user_id>lines/<line_id>', methods=['GET'])
+def get_single_line_object(user_id, line_id):
     """Get single line object details."""
     response_object = {
         'status': 'fail',
         'message': 'Line object does not exist.'
     }
     try:
-        line = Line.query.filter_by(id=line_id).first()
+        line = Line.query.filter_by(user_id=user_id).filter_by(id=line_id).first()
         if not line:
             return jsonify(response_object), 404
         else:
@@ -78,11 +78,11 @@ def get_single_line_object(line_id):
     except ValueError:
         return jsonify(response_object), 404
 
-# display all lines in the library
-@lines_blueprint.route('/api/v1/lines', methods=['GET'])
-def get_all_lines():
-    """Get all line details."""
-    lines = Line.query.all()
+# display all lines in the library for a specified user
+@lines_blueprint.route('/api/v1/users/<user_id>/lines', methods=['GET'])
+def get_all_lines(user_id):
+    """Get all line details for user."""
+    lines = Line.query.filter_by(user_id=user_id).all()
     lines_list = []
     for line in lines:
         line_object = {
@@ -103,11 +103,11 @@ def get_all_lines():
     return jsonify(response_object), 200
 
 # delete a line object
-@lines_blueprint.route('/api/v1/lines/<line_object_id>', methods=['DELETE'])
-def delete_single_line_object(line_object_id):
+@lines_blueprint.route('/api/v1/users/<user_id>/lines/<line_object_id>', methods=['DELETE'])
+def delete_single_line_object(user_id, line_object_id):
     """Delete a line object."""
     try:
-        line = Line.query.filter_by(id=line_object_id).first()
+        line = Line.query.filter_by(user_id=user_id).filter_by(id=line_object_id).first()
         if not line:
             response_object = {
                 'status': 'fail',
@@ -131,8 +131,8 @@ def delete_single_line_object(line_object_id):
         return jsonify(response_object), 400
 
 # update a line object
-@lines_blueprint.route('/api/v1/lines/<line_object_id>', methods=['PUT'])
-def update_single_line_object(line_object_id):
+@lines_blueprint.route('/api/v1/users/<user_id>/lines/<line_object_id>', methods=['PUT'])
+def update_single_line_object(user_id, line_object_id):
     """Update an existing line object."""
     post_data = request.get_json()
     if not post_data:
@@ -143,7 +143,7 @@ def update_single_line_object(line_object_id):
         return jsonify(response_object), 400
     active = post_data.get('active')
     try:
-        line = Line.query.filter_by(id=line_object_id).first()
+        line = Line.query.filter_by(user_id=user_id).filter_by(id=line_object_id).first()
         if not line:
             response_object = {
                 'status': 'fail',
