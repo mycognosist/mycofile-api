@@ -42,9 +42,11 @@ def create_app():
     from project.api.cultures import cultures_blueprint
     from project.api.auth import auth_blueprint
     from project.api.lines import lines_blueprint
+    from project.client.views import views_blueprint
     app.register_blueprint(users_blueprint)
     app.register_blueprint(cultures_blueprint)
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(lines_blueprint)
+    app.register_blueprint(views_blueprint)
 
     return app
