@@ -121,7 +121,7 @@ class TestCultureService(BaseTestCase):
         """Ensure get single culture behaves correctly."""
         culture = add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
         with self.client:
-            response = self.client.get(f'/api/v1/cultures/{culture.culture_id}')
+            response = self.client.get(f'/api/v1/users/1/cultures/{culture.culture_id}')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('Pholiota', data['data']['genus'])
@@ -134,7 +134,7 @@ class TestCultureService(BaseTestCase):
     def test_single_culture_no_id(self):
         """Ensure error is thrown if a valid culture_id is not provided."""
         with self.client:
-            response = self.client.get('/api/v1/cultures/blah')
+            response = self.client.get('/api/v1/users/1/cultures/blah')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Culture does not exist', data['message'])
@@ -143,7 +143,7 @@ class TestCultureService(BaseTestCase):
     def test_single_culture_incorrect_id(self):
         """Ensure error is thrown if the culture_id does not exist."""
         with self.client:
-            response = self.client.get('/api/v1/cultures/AAA000')
+            response = self.client.get('/api/v1/users/1/cultures/AAA000')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Culture does not exist', data['message'])
@@ -152,9 +152,9 @@ class TestCultureService(BaseTestCase):
     def test_all_cultures(self):
         """Ensure get all cultures behaves correctly."""
         add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
-        add_culture('Hypsizygus', 'tesselatus', 'RL', 'HTRL001', 2)
+        add_culture('Hypsizygus', 'tesselatus', 'RL', 'HTRL001', 1)
         with self.client:
-            response = self.client.get('/api/v1/cultures')
+            response = self.client.get('/api/v1/users/1/cultures')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data['data']['cultures']), 2)
@@ -175,7 +175,7 @@ class TestCultureService(BaseTestCase):
                 data['data']['cultures'][1]['species']
             )
             self.assertIn('RL', data['data']['cultures'][1]['strain'])
-            self.assertEqual(data['data']['cultures'][1]['user_id'], 2)
+            self.assertEqual(data['data']['cultures'][1]['user_id'], 1)
             self.assertIn(
                 'HTRL001',
                 data['data']['cultures'][1]['culture_id']
@@ -187,7 +187,7 @@ class TestCultureService(BaseTestCase):
         add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
         with self.client:
             response = self.client.delete(
-                '/api/v1/cultures/PNJP001',
+                '/api/v1/users/1/cultures/PNJP001',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -200,7 +200,7 @@ class TestCultureService(BaseTestCase):
         """Ensure error is thrown if the culture_id does not exist."""
         with self.client:
             response = self.client.delete(
-                '/api/v1/cultures/ABC123',
+                '/api/v1/users/1/cultures/ABC123',
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())
@@ -213,7 +213,7 @@ class TestCultureService(BaseTestCase):
         add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
         with self.client:
             response = self.client.put(
-                '/api/v1/cultures/PNJP001',
+                '/api/v1/users/1/cultures/PNJP001',
                 data=json.dumps(dict(
                     genus='Pholiota',
                     species='nameko',
@@ -230,7 +230,7 @@ class TestCultureService(BaseTestCase):
         """Ensure error is thrown if the JSON object is empty."""
         with self.client:
             response = self.client.put(
-                '/api/v1/cultures/PNJP001',
+                '/api/v1/users/1/cultures/PNJP001',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -243,7 +243,7 @@ class TestCultureService(BaseTestCase):
         """Ensure error is thrown if the culture_id does not exist."""
         with self.client:
             response = self.client.put(
-                '/api/v1/cultures/BBB222',
+                '/api/v1/users/1/cultures/BBB222',
                 data=json.dumps(dict(
                     genus='Pleurotus',
                     species='djamor',

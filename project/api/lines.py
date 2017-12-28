@@ -51,7 +51,7 @@ def add_line_activity():
         return jsonify(response_object), 400
 
 # display a single line object
-@lines_blueprint.route('/api/v1/users/<user_id>lines/<line_id>', methods=['GET'])
+@lines_blueprint.route('/api/v1/users/<user_id>/lines/<line_id>', methods=['GET'])
 def get_single_line_object(user_id, line_id):
     """Get single line object details."""
     response_object = {
