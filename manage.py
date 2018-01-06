@@ -5,8 +5,8 @@ import coverage
 
 from flask_script import Manager
 from project import create_app, db
-from project.api.models import Culture, User, Line
-from project.tests.utils import add_culture, add_user
+from project.api.models import Culture, Line
+from project.tests.utils import add_culture
 from flask_migrate import MigrateCommand
 
 COV = coverage.coverage(
@@ -62,15 +62,8 @@ def recreate_db():
 @manager.command
 def seed_culture_db():
     """Seeds the Culture table of the database."""
-    add_culture('Pleurotus', 'ostreatus', 'K6', 'POK6001', 1)
-    add_culture('Hericium', 'erinaceus', 'JP', 'HEJP001', 2)
-
-
-@manager.command
-def seed_user_db():
-    """Seeds the User table of the database."""
-    add_user('mycognosist', 'gnomad@cryptolab.net', 'test')
-    add_user('solar', 'solar@punk.earth', 'password')
+    add_culture('Pleurotus', 'ostreatus', 'K6', 'POK6001')
+    add_culture('Hericium', 'erinaceus', 'JP', 'HEJP001')
 
 
 @manager.command
@@ -79,55 +72,47 @@ def seed_line_db():
     l1 = Line(
         container='Petri',
         substrate='LME',
-        culture_id='POK6001',
-        user_id=1
+        culture_id='POK6001'
     )
     l2 = Line(
         container='Petri',
         substrate='LME',
-        culture_id='POK6001',
-        user_id=1,
+        culture_id='POK6001'
     )
     l11 = Line(
         container='Petri',
         substrate='LME',
         culture_id='POK6001',
-        user_id=1,
         parent=l1
     )
     l12 = Line(
         container='Petri',
         substrate='LME',
         culture_id='POK6001',
-        user_id=1,
         parent=l1
     )
     l13 = Line(
         container='Petri',
         substrate='LME',
         culture_id='POK6001',
-        user_id=1,
         parent=l1
     )
     l111 = Line(
         container='Jar (GM)',
         substrate='Wheat grain',
         culture_id='POK6001',
-        user_id=1,
         parent=l11
     )
     l1111 = Line(
         container='Jar (1L)',
         substrate='Wheat grain',
         culture_id='POK6001',
-        user_id=1,
         parent=l111
     )
     l11111 = Line(
         container='Bag',
         substrate='Hemp hurd',
         culture_id='POK6001',
-        user_id=1,
         parent=l1111
     )
     for line in [l1, l2, l11, l12, l13, l111, l1111, l11111]:

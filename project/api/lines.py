@@ -77,7 +77,7 @@ def get_single_line_object(line_id):
 
 # display all lines in the library
 @lines_blueprint.route('/api/v1/lines', methods=['GET'])
-def get_all_lines(user_id):
+def get_all_lines():
     """Get all line details for user."""
     lines = Line.query.all()
     lines_list = []

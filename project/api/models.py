@@ -4,7 +4,7 @@
 import datetime
 import jwt
 from flask import current_app
-from project import db, bcrypt
+from project import db
 
 
 class Line(db.Model):
@@ -24,11 +24,6 @@ class Line(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('lines.id'))
     active = db.Column(db.Boolean, default=True)
     contam = db.Column(db.Boolean, default=False)
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id'),
-        nullable=False
-    )
     culture_id = db.Column(
         db.String(32),
         db.ForeignKey('cultures.culture_id'),
@@ -60,7 +55,6 @@ class Culture(db.Model):
     genus = db.Column(db.String(64), index=True, nullable=False)
     species = db.Column(db.String(64), index=True, nullable=False)
     strain = db.Column(db.String(64), index=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     culture_id = db.Column(
         db.String(64),
         index=True,
@@ -70,9 +64,8 @@ class Culture(db.Model):
     def __repr__(self):
         return '<Culture %r>' % (self.culture_id)
 
-    def __init__(self, genus, species, strain, culture_id, user_id):
+    def __init__(self, genus, species, strain, culture_id):
         self.genus = genus
         self.species = species
         self.strain = strain
-        self.user_id = user_id
         self.culture_id = culture_id

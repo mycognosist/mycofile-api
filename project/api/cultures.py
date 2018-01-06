@@ -3,7 +3,7 @@
 
 from flask import Blueprint, jsonify, make_response, request, render_template
 
-from project.api.models import Culture, User
+from project.api.models import Culture
 from project import db
 
 from sqlalchemy import exc

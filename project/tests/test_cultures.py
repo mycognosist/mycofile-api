@@ -126,7 +126,6 @@ class TestCultureService(BaseTestCase):
             self.assertIn('nameko', data['data']['species'])
             self.assertIn('JP', data['data']['strain'])
             self.assertIn('PNJP001', data['data']['culture_id'])
-            self.assertEqual(data['data']['user_id'], 1)
             self.assertIn('success', data['status'])
 
     def test_single_culture_no_id(self):
