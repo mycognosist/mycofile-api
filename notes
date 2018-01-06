@@ -1,0 +1,23 @@
+# notes
+
+goal:
+
+refactor the api to be single-user
+no auth - super simple but elegant and powerful
+
+steps:
+
+remove
+ - project/api/auth.py
+ - project/api/users.py
+ - project/tests/test_auth.py
+ - project/tests/test_users.py
+ - project/tests/test_users_model.py
+ - references in __init__.py etc.
+
+refactor
+ - project/api/cultures.py
+ - project/api/lines.py
+ - project/api/models.py
+ - project/tests/test_cultures.py
+ - project/tests/test_lines.py 

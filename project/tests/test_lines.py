@@ -20,8 +20,7 @@ class TestLineService(BaseTestCase):
                 data=json.dumps(dict(
                     container='Petri',
                     substrate='LME',
-                    culture_id='GLJP001',
-                    user_id=1
+                    culture_id='GLJP001'
                 )),
                 content_type='application/json',
             )
@@ -50,25 +49,7 @@ class TestLineService(BaseTestCase):
                 '/api/v1/lines',
                 data=json.dumps(dict(
                     container='Jar',
-                    substrate='Wheat grain',
-                    user_id=1
-                )),
-                content_type='application/json',
-            )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertIn('Invalid payload.', data['message'])
-            self.assertIn('fail', data['status'])
-
-    def test_add_line_invalid_user_id_keys(self):
-        """Ensure error is thrown if the JSON object does not have a user_id key."""
-        with self.client:
-            response = self.client.post(
-                '/api/v1/lines',
-                data=json.dumps(dict(
-                    container='Jar',
-                    substrate='Wheat grain',
-                    culture_id='PCMA002'
+                    substrate='Wheat grain'
                 )),
                 content_type='application/json',
             )
@@ -82,24 +63,22 @@ class TestLineService(BaseTestCase):
         l = Line(
             container='Petri',
             substrate='LME',
-            culture_id='GLJP001',
-            user_id=1
+            culture_id='GLJP001'
         )
         l.save()
         with self.client:
-            response = self.client.get('/api/v1/users/1/lines/1')
+            response = self.client.get('/api/v1/lines/1')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('Petri', data['data']['container'])
             self.assertIn('LME', data['data']['substrate'])
             self.assertIn('GLJP001', data['data']['culture_id'])
-            self.assertEqual(data['data']['user_id'], 1)
             self.assertIn('success', data['status'])
 
     def test_single_line_no_id(self):
         """Ensure error is thrown if a valid id is not provided."""
         with self.client:
-            response = self.client.get('/api/v1/users/1/lines/blah')
+            response = self.client.get('/api/v1/lines/blah')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Line object does not exist', data['message'])
@@ -108,7 +87,7 @@ class TestLineService(BaseTestCase):
     def test_single_line_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
         with self.client:
-            response = self.client.get('/api/v1/users/1/lines/99')
+            response = self.client.get('/api/v1/lines/99')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Line object does not exist', data['message'])
@@ -119,19 +98,17 @@ class TestLineService(BaseTestCase):
         l1 = Line(
             container='Petri',
             substrate='LME',
-            culture_id='GLJP001',
-            user_id=1
+            culture_id='GLJP001'
         )
         l2 = Line(
             container='Jar',
             substrate='Wheat',
-            culture_id='HETK001',
-            user_id=1
+            culture_id='HETK001'
         )
         l1.save()
         l2.save()
         with self.client:
-            response = self.client.get('/api/v1/users/1/lines')
+            response = self.client.get('/api/v1/lines')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data['data']['lines']), 2)
@@ -139,12 +116,10 @@ class TestLineService(BaseTestCase):
             self.assertIn('LME', data['data']['lines'][0]['substrate'])
             self.assertIn('GLJP001', data['data']['lines'][0]['culture_id'])
             self.assertEqual(data['data']['lines'][0]['id'], 1)
-            self.assertEqual(data['data']['lines'][0]['user_id'], 1)
             self.assertIn('Jar', data['data']['lines'][1]['container'])
             self.assertIn('Wheat', data['data']['lines'][1]['substrate'])
             self.assertIn('HETK001', data['data']['lines'][1]['culture_id'])
             self.assertEqual(data['data']['lines'][1]['id'], 2)
-            self.assertEqual(data['data']['lines'][1]['user_id'], 1)
             self.assertIn('success', data['status'])
 
     def test_delete_line_object(self):
@@ -152,13 +127,12 @@ class TestLineService(BaseTestCase):
         l1 = Line(
             container='Petri',
             substrate='LME',
-            culture_id='GLJP001',
-            user_id=1
+            culture_id='GLJP001'
         )
         l1.save()
         with self.client:
             response = self.client.delete(
-                '/api/v1/users/1/lines/1',
+                '/api/v1/lines/1',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -171,7 +145,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the id does not exist."""
         with self.client:
             response = self.client.delete(
-                '/api/v1/users/1/lines/99',
+                '/api/v1/lines/99',
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())
@@ -185,13 +159,12 @@ class TestLineService(BaseTestCase):
             container='Petri',
             substrate='LME',
             culture_id='GLJP001',
-            user_id=1,
             active=True
         )
         l1.save()
         with self.client:
             response = self.client.put(
-                '/api/v1/users/1/lines/1',
+                '/api/v1/lines/1',
                 data=json.dumps(dict(
                     active=False
                 )),
@@ -206,7 +179,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the JSON object is empty."""
         with self.client:
             response = self.client.put(
-                '/api/v1/users/1/lines/1',
+                '/api/v1/lines/1',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -219,7 +192,7 @@ class TestLineService(BaseTestCase):
         """Ensure error is thrown if the id does not exist."""
         with self.client:
             response = self.client.put(
-                '/api/v1/users/1/lines/999',
+                '/api/v1/lines/999',
                 data=json.dumps(dict(
                     active=False
                 )),

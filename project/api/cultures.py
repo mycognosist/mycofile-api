@@ -39,7 +39,6 @@ def add_culture():
     species = post_data.get('species')
     strain = post_data.get('strain')
     culture_id = post_data.get('unique_id')
-    user_id = post_data.get('user_id')
     try:
         culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
@@ -47,8 +46,7 @@ def add_culture():
                 genus=genus,
                 species=species,
                 strain=strain,
-                culture_id=culture_id,
-                user_id=user_id
+                culture_id=culture_id
             ))
             db.session.commit()
             response_object = {
@@ -72,18 +70,18 @@ def add_culture():
 
 # display a single culture from the library
 @cultures_blueprint.route(
-    '/api/v1/users/<user_id>/cultures/<culture_id>',
+    '/api/v1/cultures/<culture_id>',
     methods=['GET']
 )
 
-def get_single_culture(user_id, culture_id):
+def get_single_culture(culture_id):
     """Get single culture details for specified user."""
     response_object = {
         'status': 'fail',
         'message': 'Culture does not exist.'
     }
     try:
-        culture = Culture.query.filter_by(user_id=user_id).filter_by(culture_id=culture_id).first()
+        culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
             return jsonify(response_object), 404
         else:
@@ -94,8 +92,7 @@ def get_single_culture(user_id, culture_id):
                     'genus': culture.genus,
                     'species': culture.species,
                     'strain': culture.strain,
-                    'culture_id': culture.culture_id,
-                    'user_id': culture.user_id
+                    'culture_id': culture.culture_id
                 }
             }
             return jsonify(response_object), 200
@@ -103,10 +100,10 @@ def get_single_culture(user_id, culture_id):
         return jsonify(response_object), 404
 
 # display all cultures in the library for a given user
-@cultures_blueprint.route('/api/v1/users/<user_id>/cultures', methods=['GET'])
-def get_all_cultures_for_user(user_id):
+@cultures_blueprint.route('/api/v1/cultures', methods=['GET'])
+def get_all_cultures_for_user():
     """Get all culture details."""
-    cultures = Culture.query.filter_by(user_id=user_id).all()
+    cultures = Culture.query.all()
     cultures_list = []
     for culture in cultures:
         culture_object = {
@@ -114,8 +111,7 @@ def get_all_cultures_for_user(user_id):
             'genus': culture.genus,
             'species': culture.species,
             'strain': culture.strain,
-            'culture_id': culture.culture_id,
-            'user_id': culture.user_id
+            'culture_id': culture.culture_id
         }
         cultures_list.append(culture_object)
     response_object = {
@@ -127,12 +123,12 @@ def get_all_cultures_for_user(user_id):
     return jsonify(response_object), 200
 
 # delete a culture
-@cultures_blueprint.route('/api/v1/users/<user_id>/cultures/<culture_id>',
+@cultures_blueprint.route('/api/v1/cultures/<culture_id>',
                            methods=['DELETE'])
-def delete_single_culture(user_id, culture_id):
+def delete_single_culture(culture_id):
     """Delete a culture."""
     try:
-        culture = Culture.query.filter_by(user_id=user_id).filter_by(culture_id=culture_id).first()
+        culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
             response_object = {
                 'status': 'fail',
@@ -156,8 +152,8 @@ def delete_single_culture(user_id, culture_id):
         return jsonify(response_object), 400
 
 # update a culture
-@cultures_blueprint.route('/api/v1/users/<user_id>/cultures/<culture_id>', methods=['PUT'])
-def update_single_culture(user_id, culture_id):
+@cultures_blueprint.route('/api/v1/cultures/<culture_id>', methods=['PUT'])
+def update_single_culture(culture_id):
     """Update an existing culture."""
     post_data = request.get_json()
     if not post_data:
@@ -170,7 +166,7 @@ def update_single_culture(user_id, culture_id):
     species = post_data.get('species')
     strain = post_data.get('strain')
     try:
-        culture = Culture.query.filter_by(user_id=user_id).filter_by(culture_id=culture_id).first()
+        culture = Culture.query.filter_by(culture_id=culture_id).first()
         if not culture:
             response_object = {
                 'status': 'fail',

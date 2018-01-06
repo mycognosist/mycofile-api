@@ -29,8 +29,7 @@ class TestCultureService(BaseTestCase):
                     genus='Pholiota',
                     species='nameko',
                     strain='JP',
-                    unique_id='PNJP001',
-                    user_id=1
+                    unique_id='PNJP001'
                 )),
                 content_type='application/json',
             )
@@ -60,8 +59,7 @@ class TestCultureService(BaseTestCase):
                 data=json.dumps(dict(
                     genus='Panaeolus',
                     species='cyanescens',
-                    strain='Maui',
-                    user_id=1
+                    strain='Maui'
                 )),
                 content_type='application/json',
             )
@@ -119,9 +117,9 @@ class TestCultureService(BaseTestCase):
 
     def test_single_culture(self):
         """Ensure get single culture behaves correctly."""
-        culture = add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
+        culture = add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
         with self.client:
-            response = self.client.get(f'/api/v1/users/1/cultures/{culture.culture_id}')
+            response = self.client.get(f'/api/v1/cultures/{culture.culture_id}')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('Pholiota', data['data']['genus'])
@@ -134,7 +132,7 @@ class TestCultureService(BaseTestCase):
     def test_single_culture_no_id(self):
         """Ensure error is thrown if a valid culture_id is not provided."""
         with self.client:
-            response = self.client.get('/api/v1/users/1/cultures/blah')
+            response = self.client.get('/api/v1/cultures/blah')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Culture does not exist', data['message'])
@@ -143,7 +141,7 @@ class TestCultureService(BaseTestCase):
     def test_single_culture_incorrect_id(self):
         """Ensure error is thrown if the culture_id does not exist."""
         with self.client:
-            response = self.client.get('/api/v1/users/1/cultures/AAA000')
+            response = self.client.get('/api/v1/cultures/AAA000')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Culture does not exist', data['message'])
@@ -151,17 +149,16 @@ class TestCultureService(BaseTestCase):
 
     def test_all_cultures(self):
         """Ensure get all cultures behaves correctly."""
-        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
-        add_culture('Hypsizygus', 'tesselatus', 'RL', 'HTRL001', 1)
+        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
+        add_culture('Hypsizygus', 'tesselatus', 'RL', 'HTRL001')
         with self.client:
-            response = self.client.get('/api/v1/users/1/cultures')
+            response = self.client.get('/api/v1/cultures')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data['data']['cultures']), 2)
             self.assertIn('Pholiota', data['data']['cultures'][0]['genus'])
             self.assertIn('nameko', data['data']['cultures'][0]['species'])
             self.assertIn('JP', data['data']['cultures'][0]['strain'])
-            self.assertEqual(data['data']['cultures'][0]['user_id'], 1)
             self.assertIn(
                 'PNJP001',
                 data['data']['cultures'][0]['culture_id']
@@ -175,7 +172,6 @@ class TestCultureService(BaseTestCase):
                 data['data']['cultures'][1]['species']
             )
             self.assertIn('RL', data['data']['cultures'][1]['strain'])
-            self.assertEqual(data['data']['cultures'][1]['user_id'], 1)
             self.assertIn(
                 'HTRL001',
                 data['data']['cultures'][1]['culture_id']
@@ -184,10 +180,10 @@ class TestCultureService(BaseTestCase):
 
     def test_delete_culture(self):
         """Ensure culture is successfully deleted."""
-        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
+        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
         with self.client:
             response = self.client.delete(
-                '/api/v1/users/1/cultures/PNJP001',
+                '/api/v1/cultures/PNJP001',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -200,7 +196,7 @@ class TestCultureService(BaseTestCase):
         """Ensure error is thrown if the culture_id does not exist."""
         with self.client:
             response = self.client.delete(
-                '/api/v1/users/1/cultures/ABC123',
+                '/api/v1/cultures/ABC123',
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())
@@ -210,10 +206,10 @@ class TestCultureService(BaseTestCase):
 
     def test_update_culture(self):
         """Ensure culture is successfully updated."""
-        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001', 1)
+        add_culture('Pholiota', 'nameko', 'JP', 'PNJP001')
         with self.client:
             response = self.client.put(
-                '/api/v1/users/1/cultures/PNJP001',
+                '/api/v1/cultures/PNJP001',
                 data=json.dumps(dict(
                     genus='Pholiota',
                     species='nameko',
@@ -230,7 +226,7 @@ class TestCultureService(BaseTestCase):
         """Ensure error is thrown if the JSON object is empty."""
         with self.client:
             response = self.client.put(
-                '/api/v1/users/1/cultures/PNJP001',
+                '/api/v1/cultures/PNJP001',
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -243,7 +239,7 @@ class TestCultureService(BaseTestCase):
         """Ensure error is thrown if the culture_id does not exist."""
         with self.client:
             response = self.client.put(
-                '/api/v1/users/1/cultures/BBB222',
+                '/api/v1/cultures/BBB222',
                 data=json.dumps(dict(
                     genus='Pleurotus',
                     species='djamor',
