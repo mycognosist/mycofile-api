@@ -115,7 +115,7 @@ def get_all_cultures():
             'culture_id': culture.culture_id
         }
         cultures_list.append(culture_object)
-    count = {'total_count': total_cultures}
+    count = {'total_cultures': total_cultures}
     cultures_list.append(count)
     response_object = {
         'status': 'success',
