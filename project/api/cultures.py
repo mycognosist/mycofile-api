@@ -99,10 +99,11 @@ def get_single_culture(culture_id):
     except ValueError:
         return jsonify(response_object), 404
 
-# display all cultures in the library for a given user
+# display all cultures in the library
 @cultures_blueprint.route('/api/v1/cultures', methods=['GET'])
-def get_all_cultures_for_user():
+def get_all_cultures():
     """Get all culture details."""
+    total_cultures = Culture.query.count()
     cultures = Culture.query.all()
     cultures_list = []
     for culture in cultures:
@@ -114,6 +115,8 @@ def get_all_cultures_for_user():
             'culture_id': culture.culture_id
         }
         cultures_list.append(culture_object)
+    count = {'total_count': total_cultures}
+    cultures_list.append(count)
     response_object = {
         'status': 'success',
         'data': {
