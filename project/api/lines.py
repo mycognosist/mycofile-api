@@ -27,11 +27,15 @@ def add_line_activity():
         return jsonify(response_object), 400
     container = post_data.get('container')
     substrate = post_data.get('substrate')
+    treatment = post_data.get('treatment')
+    parent_id = post_data.get('parent_id')
     culture_id = post_data.get('culture_id')
     try:
         line = Line(
             container=container,
             substrate=substrate,
+            treatment=treament,
+            parent_id=parent_id,
             culture_id=culture_id
         )
         line.save()
@@ -68,7 +72,11 @@ def get_single_line_object(line_id):
                     'culture_id': line.culture_id,
                     'container': line.container,
                     'substrate': line.substrate,
-                    'timestamp': line.timestamp
+                    'treatment': line.treatment,
+                    'timestamp': line.timestamp,
+                    'parent_id': line.parent_id,
+                    'active': line.active,
+                    'contam': line.contam
                 }
             }
             return jsonify(response_object), 200
@@ -79,6 +87,7 @@ def get_single_line_object(line_id):
 @lines_blueprint.route('/api/v1/lines', methods=['GET'])
 def get_all_lines():
     """Get all line details for user."""
+    total_lines = Line.query.count()
     lines = Line.query.all()
     lines_list = []
     for line in lines:
@@ -87,9 +96,15 @@ def get_all_lines():
             'culture_id': line.culture_id,
             'container': line.container,
             'substrate': line.substrate,
-            'timestamp': line.timestamp
+            'treatment': line.treatment,
+            'timestamp': line.timestamp,
+            'parent_id': line.parent_id,
+            'active': line.active,
+            'contam': line.contam
         }
         lines_list.append(line_object)
+    count = {'total_line_objects': total_lines}
+    lines_list.append(count)
     response_object = {
         'status': 'success',
         'data': {
@@ -138,6 +153,7 @@ def update_single_line_object(line_object_id):
         }
         return jsonify(response_object), 400
     active = post_data.get('active')
+    contam = post_data.get('contam')
     try:
         line = Line.query.filter_by(id=line_object_id).first()
         if not line:
