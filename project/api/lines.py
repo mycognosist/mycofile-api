@@ -26,15 +26,17 @@ def add_line_activity():
         }
         return jsonify(response_object), 400
     container = post_data.get('container')
+    dimensions = post_data.get('dimensions')
     substrate = post_data.get('substrate')
     treatment = post_data.get('treatment')
     parent_id = post_data.get('parent_id')
-    culture_id = post_data.get('culture_id')
+    culture_id = post_data.get('line_culture_id')
     try:
         line = Line(
             container=container,
+            dimensions=dimensions,
             substrate=substrate,
-            treatment=treament,
+            treatment=treatment,
             parent_id=parent_id,
             culture_id=culture_id
         )
@@ -71,6 +73,7 @@ def get_single_line_object(line_id):
                     'id': line.id,
                     'culture_id': line.culture_id,
                     'container': line.container,
+                    'dimensions': line.dimensions,
                     'substrate': line.substrate,
                     'treatment': line.treatment,
                     'timestamp': line.timestamp,
@@ -95,6 +98,7 @@ def get_all_lines():
             'id': line.id,
             'culture_id': line.culture_id,
             'container': line.container,
+            'dimensions': line.dimensions,
             'substrate': line.substrate,
             'treatment': line.treatment,
             'timestamp': line.timestamp,

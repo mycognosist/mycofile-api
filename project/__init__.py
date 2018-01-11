@@ -35,7 +35,9 @@ def create_app():
     # register blueprints
     from project.api.cultures import cultures_blueprint
     from project.api.lines import lines_blueprint
+    from project.api.counts import counts_blueprint
     app.register_blueprint(cultures_blueprint)
     app.register_blueprint(lines_blueprint)
+    app.register_blueprint(counts_blueprint)
 
     return app
