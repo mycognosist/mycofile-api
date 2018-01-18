@@ -30,7 +30,7 @@ def add_line_activity():
     substrate = post_data.get('substrate')
     treatment = post_data.get('treatment')
     parent_id = post_data.get('parent_id')
-    culture_id = post_data.get('line_culture_id')
+    culture_id = post_data.get('culture_id')
     try:
         line = Line(
             container=container,
@@ -107,8 +107,6 @@ def get_all_lines():
             'contam': line.contam
         }
         lines_list.append(line_object)
-    count = {'total_line_objects': total_lines}
-    lines_list.append(count)
     response_object = {
         'status': 'success',
         'data': {
