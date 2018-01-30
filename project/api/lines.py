@@ -67,6 +67,7 @@ def get_single_line_object(line_id):
         if not line:
             return jsonify(response_object), 404
         else:
+            level = line.level
             response_object = {
                 'status': 'success',
                 'data': {
@@ -79,7 +80,8 @@ def get_single_line_object(line_id):
                     'timestamp': line.timestamp,
                     'parent_id': line.parent_id,
                     'active': line.active,
-                    'contam': line.contam
+                    'contam': line.contam,
+                    'level': level
                 }
             }
             return jsonify(response_object), 200
@@ -94,6 +96,7 @@ def get_all_lines():
     lines = Line.query.all()
     lines_list = []
     for line in lines:
+        level = line.level
         line_object = {
             'id': line.id,
             'culture_id': line.culture_id,
@@ -104,7 +107,8 @@ def get_all_lines():
             'timestamp': line.timestamp,
             'parent_id': line.parent_id,
             'active': line.active,
-            'contam': line.contam
+            'contam': line.contam,
+            'level': line.level
         }
         lines_list.append(line_object)
     response_object = {
